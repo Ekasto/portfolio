@@ -1,0 +1,87 @@
+/* ------------------------------------------------------------------
+   tokens.css — the single source of truth for colour, type and space.
+   Components reference tokens only, never raw values.
+   Defined twice: light (:root) and dark (prefers-color-scheme).
+   ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- Colour: light -------------------------------------------- */
+  --paper:   #f6f5f2;   /* page ground — off-white, never pure white */
+  --paper-2: #edebe6;   /* recessed band (Tools), placeholder fills  */
+  --ink:     #191817;   /* body ink — near-black, never pure black   */
+  --ink-2:   #55534e;   /* secondary prose, metadata                 */
+  --rule:    #d8d5cd;   /* hairlines, borders                        */
+
+  /* One accent, used on under 5% of the page.
+     L lowered from the 0.58 of the design canvas to 0.54 so links
+     clear 4.5:1 on --paper-2 as well as --paper. Hex first as a
+     fallback for engines without oklch(). */
+  --accent:   #bc3e0d;
+  --accent:   oklch(0.54 0.17 38);
+  --accent-2: #a02200;
+  --accent-2: oklch(0.46 0.17 38);
+
+  /* --- Type ------------------------------------------------------ */
+  --font-display: "Familjen Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body:    "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Fluid scale: each clamp lands on the mobile artboard value at
+     390px and the desktop artboard value at >=1440px. */
+  --size-h1:      clamp(2.375rem, 1.20rem + 5.00vw, 3.875rem); /* 38 -> 62 */
+  --size-h2:      clamp(1.875rem, 1.10rem + 3.20vw, 2.750rem); /* 30 -> 44 */
+  --size-h3:      clamp(1.625rem, 1.30rem + 1.40vw, 2.000rem); /* 26 -> 32 */
+  --size-tool:    clamp(2.500rem, 1.90rem + 2.50vw, 3.250rem); /* 40 -> 52 */
+  --size-method:  clamp(1.313rem, 1.15rem + 0.70vw, 1.500rem); /* 21 -> 24 */
+  --size-email:   clamp(1.750rem, 0.40rem + 5.60vw, 4.000rem); /* 28 -> 64 */
+  --size-lead:    clamp(1.125rem, 1.05rem + 0.30vw, 1.250rem); /* 18 -> 20 */
+  --size-body:    clamp(1.000rem, 0.98rem + 0.10vw, 1.063rem); /* 16 -> 17 */
+  --size-small:   1rem;
+  --size-meta:    clamp(0.625rem, 0.60rem + 0.10vw, 0.750rem); /* 10 -> 12 */
+  --size-eyebrow: clamp(0.688rem, 0.66rem + 0.10vw, 0.750rem); /* 11 -> 12 */
+
+  --track-mono:   0.1em;    /* letter-spacing for mono metadata */
+  --track-eyebrow: 0.14em;  /* section numbers run wider        */
+
+  /* --- Space: 4px base, 8px steps above 16px -------------------- */
+  --s-1: 0.25rem;  /*  4 */
+  --s-2: 0.5rem;   /*  8 */
+  --s-3: 0.75rem;  /* 12 */
+  --s-4: 1rem;     /* 16 */
+  --s-5: 1.25rem;  /* 20 */
+  --s-6: 1.5rem;   /* 24 */
+  --s-8: 2rem;     /* 32 */
+  --s-9: 2.25rem;  /* 36 */
+  --s-10: 2.5rem;  /* 40 */
+  --s-12: 3rem;    /* 48 */
+  --s-14: 3.5rem;  /* 56 */
+  --s-16: 4rem;    /* 64 */
+  --s-18: 4.5rem;  /* 72 */
+
+  /* Section rhythm and gutters both scale mobile -> desktop */
+  --space-section: clamp(4.5rem, 2.0rem + 10vw, 9rem);   /*  72 -> 144 */
+  --space-band:    clamp(4rem,   1.5rem + 10vw, 7.5rem); /*  64 -> 120 */
+  --gutter:        clamp(1.5rem, 5vw, 6.25rem);          /*  24 -> 100 */
+  --measure: 66ch;      /* prose measure */
+  --content: 1240px;    /* 12-col content width */
+
+  --tap: 44px;          /* minimum tap target */
+  --ease: 180ms ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:   #131312;
+    --paper-2: #1b1b19;
+    --ink:     #eceae4;
+    --ink-2:   #a5a29b;
+    --rule:    #302f2c;
+
+    --accent:   #f78955;
+    --accent:   oklch(0.74 0.15 45);
+    --accent-2: #ffa87b;
+    --accent-2: oklch(0.82 0.13 45);
+  }
+}
