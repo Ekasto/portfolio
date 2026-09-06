@@ -212,6 +212,42 @@ html { scroll-behavior: smooth; }
 .nav__link[aria-current="true"] { color: var(--accent); }
 .nav__resume { display: none; }
 
+/* --- Theme toggle ------------------------------------------------ */
+/* Cycles system -> light -> dark. Hidden until JS enables it, so it
+   never sits there dead for a visitor with scripting off. */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: var(--tap);
+  margin-left: auto;   /* mobile: sits at the end of the nav row */
+  padding: 0 var(--s-3);
+  background: none;
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--ease), border-color var(--ease);
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
+
+/* The glyph is drawn from the current mode, so it needs no icon font. */
+.theme-toggle__dot {
+  width: 10px;
+  height: 10px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+/* system: half filled · light: hollow · dark: solid */
+:root:not([data-theme]) .theme-toggle__dot {
+  background: linear-gradient(to right, currentColor 50%, transparent 50%);
+}
+:root[data-theme="light"] .theme-toggle__dot { background: none; }
+:root[data-theme="dark"]  .theme-toggle__dot { background: currentColor; }
+
 /* --- Placeholder media ------------------------------------------- */
 /* Hatched blocks stand in for captures until real assets land.
    Swap a .ph for an <img> and the figure keeps working unchanged. */
@@ -476,6 +512,8 @@ html { scroll-behavior: smooth; }
   .nav__link { padding: 0 var(--s-3); font-size: var(--size-meta); letter-spacing: var(--track-mono); }
   .nav__resume { display: flex; margin-left: var(--s-4); padding: 0 var(--s-5); }
   .site-header__bar > .btn--outline { display: none; }
+  /* in the single header row the toggle no longer needs pushing right */
+  .theme-toggle { margin-left: var(--s-3); }
 
   .rule { width: 56px; margin: var(--s-4) 0 var(--s-6); }
 

@@ -1,27 +1,55 @@
 /* ------------------------------------------------------------------
    tokens.css — the single source of truth for colour, type and space.
    Components reference tokens only, never raw values.
-   Defined twice: light (:root) and dark (prefers-color-scheme).
+
+   Theming works in three states:
+     no data-theme   follow the operating system
+     data-theme=light  forced light, even on a dark system
+     data-theme=dark   forced dark, even on a light system
+
+   Each palette's values are written once as --*-l / --*-d below; the
+   blocks further down only re-point --paper, --ink and friends at one
+   set or the other. Add a colour by defining both variants once.
    ------------------------------------------------------------------ */
 
 :root {
-  color-scheme: light dark;
-
-  /* --- Colour: light -------------------------------------------- */
-  --paper:   #f6f5f2;   /* page ground — off-white, never pure white */
-  --paper-2: #edebe6;   /* recessed band (Tools), placeholder fills  */
-  --ink:     #191817;   /* body ink — near-black, never pure black   */
-  --ink-2:   #55534e;   /* secondary prose, metadata                 */
-  --rule:    #d8d5cd;   /* hairlines, borders                        */
+  /* --- Palette values: light ------------------------------------ */
+  --paper-l:   #f6f5f2;   /* page ground — off-white, never pure white */
+  --paper-2-l: #edebe6;   /* recessed band (Tools), placeholder fills  */
+  --ink-l:     #191817;   /* body ink — near-black, never pure black   */
+  --ink-2-l:   #55534e;   /* secondary prose, metadata                 */
+  --rule-l:    #d8d5cd;   /* hairlines, borders                        */
 
   /* One accent, used on under 5% of the page.
      L lowered from the 0.58 of the design canvas to 0.54 so links
      clear 4.5:1 on --paper-2 as well as --paper. Hex first as a
      fallback for engines without oklch(). */
-  --accent:   #bc3e0d;
-  --accent:   oklch(0.54 0.17 38);
-  --accent-2: #a02200;
-  --accent-2: oklch(0.46 0.17 38);
+  --accent-l:   #bc3e0d;
+  --accent-l:   oklch(0.54 0.17 38);
+  --accent-2-l: #a02200;
+  --accent-2-l: oklch(0.46 0.17 38);
+
+  /* --- Palette values: dark ------------------------------------- */
+  --paper-d:   #131312;
+  --paper-2-d: #1b1b19;
+  --ink-d:     #eceae4;
+  --ink-2-d:   #a5a29b;
+  --rule-d:    #302f2c;
+
+  --accent-d:   #f78955;
+  --accent-d:   oklch(0.74 0.15 45);
+  --accent-2-d: #ffa87b;
+  --accent-2-d: oklch(0.82 0.13 45);
+
+  /* --- Active palette: light is the default --------------------- */
+  color-scheme: light;
+  --paper:    var(--paper-l);
+  --paper-2:  var(--paper-2-l);
+  --ink:      var(--ink-l);
+  --ink-2:    var(--ink-2-l);
+  --rule:     var(--rule-l);
+  --accent:   var(--accent-l);
+  --accent-2: var(--accent-2-l);
 
   /* --- Type ------------------------------------------------------ */
   --font-display: "Familjen Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -71,17 +99,39 @@
   --ease: 180ms ease;
 }
 
+/* Follow the system, unless the visitor has explicitly chosen light. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --paper:   #131312;
-    --paper-2: #1b1b19;
-    --ink:     #eceae4;
-    --ink-2:   #a5a29b;
-    --rule:    #302f2c;
-
-    --accent:   #f78955;
-    --accent:   oklch(0.74 0.15 45);
-    --accent-2: #ffa87b;
-    --accent-2: oklch(0.82 0.13 45);
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper:    var(--paper-d);
+    --paper-2:  var(--paper-2-d);
+    --ink:      var(--ink-d);
+    --ink-2:    var(--ink-2-d);
+    --rule:     var(--rule-d);
+    --accent:   var(--accent-d);
+    --accent-2: var(--accent-2-d);
   }
+}
+
+/* An explicit choice wins over the system in both directions. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper:    var(--paper-d);
+  --paper-2:  var(--paper-2-d);
+  --ink:      var(--ink-d);
+  --ink-2:    var(--ink-2-d);
+  --rule:     var(--rule-d);
+  --accent:   var(--accent-d);
+  --accent-2: var(--accent-2-d);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --paper:    var(--paper-l);
+  --paper-2:  var(--paper-2-l);
+  --ink:      var(--ink-l);
+  --ink-2:    var(--ink-2-l);
+  --rule:     var(--rule-l);
+  --accent:   var(--accent-l);
+  --accent-2: var(--accent-2-l);
 }

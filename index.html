@@ -22,6 +22,22 @@
 
 <link rel="stylesheet" href="./assets/css/tokens.css">
 <link rel="stylesheet" href="./assets/css/site.css">
+
+<!-- Apply a saved theme choice before first paint, so a visitor who
+     picked light on a dark system never sees a flash of the wrong one.
+     Must stay inline and synchronous, and after the stylesheets. -->
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "light" || t === "dark") {
+        document.documentElement.setAttribute("data-theme", t);
+      }
+    } catch (e) {
+      /* private mode or storage blocked — fall back to the system theme */
+    }
+  })();
+</script>
 </head>
 <body>
 
@@ -44,6 +60,13 @@
         <a class="nav__link" href="#tools">Tools</a>
         <a class="nav__link" href="#method">Method</a>
         <a class="nav__link" href="#about">About</a>
+
+        <!-- Revealed by theme.js; stays hidden without scripting. -->
+        <button class="theme-toggle" type="button" id="theme-toggle" hidden>
+          <span class="theme-toggle__dot" aria-hidden="true"></span>
+          <span class="theme-toggle__label">System</span>
+        </button>
+
         <!-- Desktop only: the artboard moves Resume to the end of the nav. -->
         <a class="btn btn--outline nav__resume" href="#contact">Resume</a>
       </nav>
@@ -273,5 +296,6 @@
   </div>
 </footer>
 
+<script src="./assets/js/theme.js" defer></script>
 </body>
 </html>
