@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Crack Painter 2D — a shatter tool you author | Paul Schwab</title>
+<meta name="description" content="Case study: Crack Painter 2D, a Unity editor tool published on the Asset Store. You paint the crack lines onto a sprite and it bakes a physics-ready shatter prefab that breaks along them. Designed, built, documented and listed solo.">
+<meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131312" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Crack Painter 2D — a shatter tool you author">
+<meta property="og:description" content="A Unity editor tool on the Asset Store: paint the crack lines onto a sprite and it bakes a physics-ready shatter prefab that breaks along them. Designed, built, documented and listed solo.">
+<meta property="og:image" content="../../assets/img/crack-painter/og.jpg">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23191817'/%3E%3Crect%20x='6'%20y='21'%20width='20'%20height='3'%20fill='%23bc3e0d'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/case-study.css">
+
+<!-- Apply a saved theme choice before first paint. Must stay inline and
+     synchronous, and after the stylesheets. -->
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "light" || t === "dark") {
+        document.documentElement.setAttribute("data-theme", t);
+      }
+    } catch (e) {
+      /* private mode or storage blocked — fall back to the system theme */
+    }
+  })();
+</script>
+</head>
+<body class="case crack-painter">
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- The slab, defined once and placed by <use> in both bands. Nine pieces
+     cut by eight crack lines, sitting on a base that is filled with the
+     page colour — so the page itself is the bottom of the slab and the
+     join never needs a seam.
+
+     The opening band places the pieces where they were drawn and paints
+     the cracks over them; the closing band places the very same pieces,
+     lifted and spun off that base. Nothing changes between the two but
+     nine transforms, which is the tool's whole claim in one image.
+
+     Geometry generated from a seeded script; the seed is the release
+     date. See planning/ for it. -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <g id="cp-pieces">
+      <path id="cp-1" d="M -30.0 76.0 L 12.0 65.8 L 54.0 87.8 L 96 78.0 L 107.3 96.0 L 94.9 114.0 L 97.9 132.0 L 96.0 150.0 L -30.0 150.0 L -30.0 76.0 Z"/>
+      <path id="cp-2" d="M 96 78.0 L 135.3 77.8 L 174.7 62.8 L 214 60.3 L 205.2 82.7 L 214.5 105.2 L 210.2 127.6 L 214.0 150.0 L 96.0 150.0 L 97.9 132.0 L 94.9 114.0 L 107.3 96.0 L 96 78.0 Z"/>
+      <path id="cp-3" d="M 214 60.3 L 293.0 65.4 L 372 63.9 L 382.1 92.6 L 361.7 121.3 L 372.0 150.0 L 214.0 150.0 L 210.2 127.6 L 214.5 105.2 L 205.2 82.7 L 214 60.3 Z"/>
+      <path id="cp-4" d="M 372 63.9 L 416.3 60.9 L 460.7 90.9 L 505 88.8 L 516.7 104.1 L 500.3 119.4 L 513.9 134.7 L 505.0 150.0 L 372.0 150.0 L 361.7 121.3 L 382.1 92.6 L 372 63.9 Z"/>
+      <path id="cp-5" d="M 505 88.8 L 584.5 52.9 L 664 35.9 L 660.6 64.4 L 668.3 92.9 L 655.9 121.5 L 664.0 150.0 L 505.0 150.0 L 513.9 134.7 L 500.3 119.4 L 516.7 104.1 L 505 88.8 Z"/>
+      <path id="cp-6" d="M 664 35.9 L 730.0 66.8 L 796 79.6 L 792.0 103.1 L 807.2 126.5 L 796.0 150.0 L 664.0 150.0 L 655.9 121.5 L 668.3 92.9 L 660.6 64.4 L 664 35.9 Z"/>
+      <path id="cp-7" d="M 796 79.6 L 846.3 85.6 L 896.7 67.9 L 947 62.5 L 963.1 91.7 L 934.5 120.8 L 947.0 150.0 L 796.0 150.0 L 807.2 126.5 L 792.0 103.1 L 796 79.6 Z"/>
+      <path id="cp-8" d="M 947 62.5 L 992.7 50.4 L 1038.3 64.2 L 1084 47.6 L 1098.4 81.7 L 1072.8 115.9 L 1084.0 150.0 L 947.0 150.0 L 934.5 120.8 L 963.1 91.7 L 947 62.5 Z"/>
+      <path id="cp-9" d="M 1084 47.6 L 1157.0 45.8 L 1230.0 58.0 L 1230.0 150.0 L 1084.0 150.0 L 1072.8 115.9 L 1098.4 81.7 L 1084 47.6 Z"/>
+    </g>
+
+    <g id="cp-slab">
+      <rect x="-30.0" y="150.0" width="1260.0" height="50.0"/>
+      <use href="#cp-1"/>
+      <use href="#cp-2"/>
+      <use href="#cp-3"/>
+      <use href="#cp-4"/>
+      <use href="#cp-5"/>
+      <use href="#cp-6"/>
+      <use href="#cp-7"/>
+      <use href="#cp-8"/>
+      <use href="#cp-9"/>
+    </g>
+
+    <g id="cp-broken">
+      <rect x="-30.0" y="150.0" width="1260.0" height="50.0"/>
+      <use href="#cp-1" transform="translate(-27.7 -12.8) rotate(-13.2 33.0 113.5)"/>
+      <use href="#cp-2" transform="translate(-25.3 -20.5) rotate(-10.7 155.0 109.6)"/>
+      <use href="#cp-3" transform="translate(-17.4 -32.2) rotate(-8.1 293.0 106.0)"/>
+      <use href="#cp-4" transform="translate(-11.4 -39.5) rotate(-5.1 438.5 113.2)"/>
+      <use href="#cp-5" transform="translate(-3.2 -49.4) rotate(-0.1 584.5 106.2)"/>
+      <use href="#cp-6" transform="translate(5.2 -38.0) rotate(5.1 730.0 103.9)"/>
+      <use href="#cp-7" transform="translate(11.4 -27.0) rotate(6.2 871.5 110.5)"/>
+      <use href="#cp-8" transform="translate(22.9 -18.6) rotate(12.1 1015.5 102.5)"/>
+      <use href="#cp-9" transform="translate(32.2 -11.9) rotate(11.8 1157.0 101.4)"/>
+    </g>
+
+    <g id="cp-cracks">
+      <path d="M 96 78.0 L 107.3 96.0 L 94.9 114.0 L 97.9 132.0 L 96.0 150.0"/>
+      <path d="M 214 60.3 L 205.2 82.7 L 214.5 105.2 L 210.2 127.6 L 214.0 150.0"/>
+      <path d="M 372 63.9 L 382.1 92.6 L 361.7 121.3 L 372.0 150.0"/>
+      <path d="M 505 88.8 L 516.7 104.1 L 500.3 119.4 L 513.9 134.7 L 505.0 150.0"/>
+      <path d="M 664 35.9 L 660.6 64.4 L 668.3 92.9 L 655.9 121.5 L 664.0 150.0"/>
+      <path d="M 796 79.6 L 792.0 103.1 L 807.2 126.5 L 796.0 150.0"/>
+      <path d="M 947 62.5 L 963.1 91.7 L 934.5 120.8 L 947.0 150.0"/>
+      <path d="M 1084 47.6 L 1098.4 81.7 L 1072.8 115.9 L 1084.0 150.0"/>
+    </g>
+  </defs>
+</svg>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="site-header__bar">
+      <a class="brand" href="../../">
+        <span class="brand__name">Paul Schwab</span>
+        <span class="brand__role">Systems &middot; Tools</span>
+      </a>
+
+      <a class="btn btn--outline" href="../../#contact">Resume</a>
+
+      <nav class="nav" aria-label="Sections">
+        <a class="nav__link" href="../../#work">Work</a>
+        <a class="nav__link" href="../../#tools" aria-current="true">Tools</a>
+        <a class="nav__link" href="../../#method">Method</a>
+        <a class="nav__link" href="../../#about">About</a>
+
+        <button class="theme-toggle" type="button" id="theme-toggle" hidden>
+          <span class="theme-toggle__dot" aria-hidden="true"></span>
+          <span class="theme-toggle__label">System</span>
+        </button>
+
+        <a class="btn btn--outline nav__resume" href="../../#contact">Resume</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<main id="main">
+
+  <!-- ===== The slab, whole, with the cracks painted on ============= -->
+  <section class="range range--open">
+    <div class="range__sky" aria-hidden="true"></div>
+    <svg class="range__layers" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <g class="slab"><use href="#cp-slab"></use></g>
+      <g class="slab__cracks"><use href="#cp-cracks"></use></g>
+    </svg>
+
+    <div class="wrap">
+      <p class="eyebrow">Tools &mdash; 01 &mdash; Unity Asset Store, 2026</p>
+      <div class="rule"></div>
+      <h1 class="case-title">Crack Painter 2D</h1>
+      <p class="case-tagline">A Unity editor tool that breaks a 2D sprite along crack lines you paint yourself.</p>
+      <p class="hero__ctas">
+        <a class="btn btn--sky" href="https://assetstore.unity.com/packages/tools/sprite-management/crack-painter-2d-sprite-shatter-break-tool-395136" target="_blank" rel="noopener">View it on the Asset Store &nearr;</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: var(--s-10)">
+    <div class="wrap">
+      <dl class="case-facts">
+        <div><dt>My role</dt><dd>Design, code, documentation and the listing &mdash; solo</dd></div>
+        <div><dt>Shipped</dt><dd>v1.0.0 &mdash; 24 August 2026</dd></div>
+        <div><dt>Built with</dt><dd>Unity 2022.3, C# &mdash; Built-in, URP and HDRP</dd></div>
+        <div><dt>Store</dt><dd>Unity Asset Store &mdash; Tools / Sprite Management</dd></div>
+        <div><dt>Licence</dt><dd>&euro;13.80 &mdash; Extension Asset, full C# source</dd></div>
+        <div><dt>Package</dt><dd>1.4&nbsp;MB, no dependencies, demo scene of six objects</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Establishing shot: the demo scene, before anything has been hit. -->
+  <figure class="plate">
+    <img src="../../assets/img/crack-painter/plate.webp"
+         srcset="../../assets/img/crack-painter/plate-1000.webp 1000w, ../../assets/img/crack-painter/plate.webp 1420w"
+         sizes="100vw" width="1420" height="544" decoding="async"
+         alt="The demo scene running in Unity: two wooden crates, a stone block wall, a framed window, a small sign and a stone pillar, all standing intact on a grass strip against a dark blue sky.">
+    <figcaption class="figure__caption">
+      <span>Fig. 01</span>
+      <span>The demo scene that ships with the package &mdash; six objects, each with its own painted pattern, before anything is hit</span>
+    </figcaption>
+  </figure>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist">The problem</p>
+          <div class="spec">
+            <p class="spec__label">What a generator offers</p>
+            <dl class="spec__list">
+              <div><dt>Patterns</dt><dd>Grid, hexagonal, radial, triangular, Voronoi</dd></div>
+              <div><dt>Knows</dt><dd>The silhouette of the sprite</dd></div>
+              <div><dt>Does not know</dt><dd>What the sprite depicts</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <p class="beat__text">Every 2D shatter tool I could find generates its fragments procedurally. That is fine for glass, and wrong for almost everything else: a crate splinters into diamonds instead of coming apart along its planks, and a stone wall breaks straight through the blocks instead of around the mortar. The sprite is drawn by someone who decided where its seams are, and then the break ignores them.</p>
+          <p class="beat__text">Crack Painter 2D moves that decision back to the person who drew the thing. You paint the crack lines onto the sprite, in Unity, and the break follows them exactly. Everything else in the tool exists to make that one act cheap enough to be worth doing.</p>
+        </div>
+      </div>
+
+      <!-- Runs the full width, breaking the two-column beat rhythm: this
+           is the block that must not be skipped, so it is the one that
+           behaves differently. -->
+      <section class="contribution">
+        <div class="contribution__head">
+          <h2 class="contribution__title">What I did</h2>
+          <p class="contribution__role">Design, code, docs &amp; listing &mdash; solo</p>
+        </div>
+
+        <ol class="ledger">
+          <li class="ledger__row">
+            <p class="ledger__mark"><span class="ledger__no"></span><span class="ledger__tag">Authoring</span></p>
+            <div class="ledger__body">
+              <h3 class="ledger__title">The crack map is an ordinary PNG</h3>
+              <p class="ledger__text">The pattern lives in a same-size image beside the sprite, painted in magenta, and the tool ships an editor for it: hard brush and eraser, straight-line mode, brush size, zoom, pan, undo and redo. Because it is only a PNG, nobody is locked into my editor &mdash; open it in Photoshop halfway through if that is faster, then come back and bake. The brush also opens at a size scaled to the sprite, so it is not a hairline on a 1024&nbsp;px wall or a slab on a 32&nbsp;px crate.</p>
+            </div>
+          </li>
+
+          <li class="ledger__row">
+            <p class="ledger__mark"><span class="ledger__no"></span><span class="ledger__tag">Feedback</span></p>
+            <div class="ledger__body">
+              <h3 class="ledger__title">Making the one invisible failure visible</h3>
+              <p class="ledger__text">A crack only separates a piece if it runs unbroken from one edge of the sprite to another, or closes a loop. A line that stops one pixel short looks finished and silently does nothing &mdash; and you only find out after a bake. So the editor runs the baker&rsquo;s own flood fill after every stroke: freed pieces turn grey, lines that separate nothing are tinted red, and the status bar counts the pieces you would get right now.</p>
+            </div>
+          </li>
+
+          <li class="ledger__row">
+            <p class="ledger__mark"><span class="ledger__no"></span><span class="ledger__tag">Runtime</span></p>
+            <div class="ledger__body">
+              <h3 class="ledger__title">The break stays tunable after the bake</h3>
+              <p class="ledger__text">Force, upward bias, blast radius, per-chunk variation, torque and gravity are all runtime values on the component, not decisions frozen into the prefab. One baked object can crumble under a footstep and detonate under a rocket, and a designer can find the difference on the slider rather than by asking me to bake it again.</p>
+            </div>
+          </li>
+
+          <li class="ledger__row">
+            <p class="ledger__mark"><span class="ledger__no"></span><span class="ledger__tag">Shipping</span></p>
+            <div class="ledger__body">
+              <h3 class="ledger__title">Everything around the code</h3>
+              <p class="ledger__text">Preflight checks for the ways a bake goes wrong, a demo scene with six pre-baked objects, documentation, the store page, the key image, the guide video, and the submission itself. This is the part a student project never teaches you: the tool was working long before it was something a stranger could buy and use without me in the room.</p>
+            </div>
+          </li>
+        </ol>
+
+        <p class="contribution__credit">Sole author and publisher. The demo art in <code>Demo/Art/</code> is generated illustrative content, declared as such on the listing, and can be deleted without affecting the tool.</p>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===== Beats. The margin column states the tool as data; the prose
+       says what the decision was. The section markers are the stages of
+       the tool's own pipeline, in the order you meet them. ========== -->
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist"><b>01</b> &mdash; the crack map</p>
+          <div class="spec">
+            <p class="spec__label">In the window</p>
+            <dl class="spec__list">
+              <div><dt>Draw</dt><dd>Brush, eraser, straight lines, adjustable size</dd></div>
+              <div><dt>Navigate</dt><dd>Zoom, pan, Fit, 1:1</dd></div>
+              <div><dt>Undo</dt><dd>Full history, and Clear</dd></div>
+              <div><dt>Show Pieces</dt><dd>Greys out everything already free</dd></div>
+              <div><dt>Auto Check</dt><dd>Re-runs the flood fill after every stroke</dd></div>
+              <div><dt>Min Chunk Px</dt><dd>Ignores specks left between cracks</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">You can see whether a crack actually cuts</h2>
+          <p class="beat__text">This is the feature the tool is really about. Painting cracks is easy; knowing whether you painted them <em>correctly</em> is not, because the failure is a single missing pixel and the artwork looks perfect either way.</p>
+          <p class="beat__text">Rather than explain the rule in the documentation and let people trip over it, I put the answer on screen continuously. The editor calls the same flood fill the baker will call, on every stroke, and reports the piece count it would produce. The bake-and-check loop that a tool like this normally forces on you simply is not there.</p>
+          <p class="beat__text">The status line does the rest of the work: piece count, whether it is ready to bake, the cursor position, the sprite&rsquo;s dimensions, the zoom, and whether the map has unsaved changes. Nothing about the state of the job is hidden behind a menu.</p>
+          <figure class="figure">
+            <img class="shot" src="../../assets/img/crack-painter/baker.webp"
+                 srcset="../../assets/img/crack-painter/baker-800.webp 800w, ../../assets/img/crack-painter/baker.webp 1280w"
+                 sizes="(min-width: 900px) 1240px, 100vw" width="1280" height="720" loading="lazy" decoding="async"
+                 alt="The Crack Painter 2D window in Unity: a stone wall sprite with magenta crack lines painted between the blocks, a toolbar of brush, eraser and undo controls above it, and a status bar reading &ldquo;7 pieces &mdash; ready to bake&rdquo;.">
+            <figcaption class="figure__caption">
+              <span>Fig. 02 &mdash; 01 / the crack map</span>
+              <span>Seven pieces, counted live &mdash; the wall breaks around the mortar because that is where the lines went</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist"><b>02</b> &mdash; the bake</p>
+          <div class="spec">
+            <p class="spec__label">What one click does</p>
+            <dl class="spec__list">
+              <div><dt>Cuts</dt><dd>Deletes the painted pixels from the sprite</dd></div>
+              <div><dt>Fills</dt><dd>Flood-fills what is left into separate regions</dd></div>
+              <div><dt>Bakes</dt><dd>Each region to a sprite of its own</dd></div>
+              <div><dt>Assembles</dt><dd>A prefab with colliders, rigidbodies and the component wired up</dd></div>
+              <div><dt>Inherits</dt><dd>Sorting layer, sorting order and pixels per unit from the source</dd></div>
+              <div><dt>Colliders</dt><dd>Trace each chunk&rsquo;s generated physics shape</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">The output is a plain Unity prefab</h2>
+          <p class="beat__text">There is no runtime magic and no proprietary asset type. What comes out of the baker is SpriteRenderers, Physics 2D colliders and rigidbodies, arranged under one root &mdash; so it drops into whatever sorting, materials and layers a project already uses, and anyone can open it up and see what it is made of.</p>
+          <p class="beat__text">That was a deliberate constraint rather than a shortcut. A tool that produces ordinary engine objects can be understood, edited and thrown away by its user; one that produces its own special thing has to be trusted. Re-baking regenerates in place, so changing your mind about the pattern costs one click, not a cleanup.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist"><b>03</b> &mdash; <code>Shatter()</code></p>
+          <div class="spec">
+            <p class="spec__label">Break force</p>
+            <dl class="spec__list">
+              <div><dt>Explosion Force</dt><dd>Outward impulse from the origin of the blast</dd></div>
+              <div><dt>Upward Bias</dt><dd>Extra lift, so pieces pop rather than slide</dd></div>
+              <div><dt>Explosion Radius</dt><dd>0 gives every chunk full force; above 0 it falls off</dd></div>
+              <div><dt>Force Variation</dt><dd>Randomises per chunk, so the break is not uniform</dd></div>
+              <div><dt>Torque</dt><dd>Random spin per chunk</dd></div>
+              <div><dt>Chunk Gravity Scale</dt><dd>How the pieces fall once free</dd></div>
+            </dl>
+          </div>
+          <div class="spec">
+            <p class="spec__label">What sets it off</p>
+            <dl class="spec__list">
+              <div><dt>Manual</dt><dd>Code, a UnityEvent, a UI button, an animation event</dd></div>
+              <div><dt>On contact</dt><dd>Collision or trigger, with a required tag and a minimum impact speed</dd></div>
+              <div><dt>On break</dt><dd><code>OnShatter</code> fires for SFX, particles, score, shake</dd></div>
+              <div><dt>Undo</dt><dd><code>ResetIntact()</code>, for pooling and retries</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">One prefab, many kinds of break</h2>
+          <p class="beat__text">The pattern is fixed at bake time. The force is not. Keeping those two things separate is what makes a single baked object worth authoring: the same crate can be nudged apart by a player walking into it and blown across the screen by an explosion, and the difference is six numbers on a component.</p>
+          <p class="beat__text">The triggers matter for the same reason. If breaking something requires writing a script, the tool belongs to programmers; if it can be fired from a UnityEvent, a UI button, an animation event or a collision with a tag and a speed threshold, a designer can build a breakable object end to end without opening the code. The component carries its own Shatter and Reset Intact buttons as well, so a break can be tried in play mode before any trigger for it exists.</p>
+          <figure class="figure">
+            <img class="shot--tall" src="../../assets/img/crack-painter/inspector.webp"
+                 width="533" height="800" loading="lazy" decoding="async"
+                 alt="The Sprite Shatter component in Unity's Inspector, showing Break Force fields (Explosion Force 5, Upward Bias 2.2, Explosion Radius 0, Force Variation 0.35, Torque 7, Chunk Gravity Scale 1), a Cleanup group, a Trigger Mode dropdown set to Manual, an On Shatter event list, and Shatter and Reset Intact buttons.">
+            <figcaption class="figure__caption">
+              <span>Fig. 03 &mdash; 03 / <code>Shatter()</code></span>
+              <span>Everything the baker wired up, and everything left for the designer to turn</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist">In motion</p>
+          <div class="spec">
+            <p class="spec__label">The demo scene</p>
+            <dl class="spec__list">
+              <div><dt>Ships with</dt><dd>Six pre-baked objects: crate, long crate, wall, window, sign, pillar</dd></div>
+              <div><dt>Zone A &mdash; space</dt><dd>Shatter fired straight from code</dd></div>
+              <div><dt>Zone B &mdash; click</dt><dd>Launches a ball; the wall breaks where it lands</dd></div>
+              <div><dt>Zone C &mdash; press C</dt><dd>A sequence, several objects at once</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">What it looks like running</h2>
+          <p class="beat__text">The demo is three zones because there are three ways someone will want to set a break off, and a demo scene that only shows one of them answers the wrong question.</p>
+          <figure class="figure clip">
+            <!-- Click-to-play rather than autoplay: it is the accessible default,
+                 and it respects a reduced-motion preference without needing script. -->
+            <video src="../../assets/img/crack-painter/demo.mp4" width="960" height="440"
+                   controls loop muted playsinline preload="metadata"
+                   poster="../../assets/img/crack-painter/demo-poster.webp"
+                   aria-label="A short looping clip of the Crack Painter 2D demo scene: a stone wall is struck by a ball and breaks into blocks along the painted mortar lines, which then fall and settle on the ground.">
+              <a href="../../assets/img/crack-painter/demo.mp4">Download the demo clip (MP4)</a>
+            </video>
+            <figcaption class="figure__caption">
+              <span>Fig. 04</span>
+              <span>Zone B &mdash; the wall comes apart block by block, not into fragments</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist">The line I drew</p>
+          <div class="spec">
+            <p class="spec__label">Deliberately not</p>
+            <dl class="spec__list">
+              <div><dt>Runtime damage</dt><dd>No &mdash; the pattern is fixed at bake time</dd></div>
+              <div><dt>Bullet holes</dt><dd>No &mdash; nothing is carved where a shot lands</dd></div>
+              <div><dt>Erosion</dt><dd>No &mdash; sprites are not worn away pixel by pixel</dd></div>
+              <div><dt>Swipe cutting</dt><dd>No &mdash; the line cannot be chosen at runtime</dd></div>
+            </dl>
+          </div>
+          <p class="aside-note">The listing says all of this in as many words, and points people at a destructible-sprite asset if that is what they actually need.</p>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">What it refuses to do</h2>
+          <p class="beat__text">The pattern is authored ahead of time, which means the tool costs you a few minutes per sprite. That is a real price, and it buys something specific: objects that break the way they were drawn to break. It is worth paying on a boss, a set-piece wall or a puzzle element, and not worth paying on a hundred background props.</p>
+          <p class="beat__text">So the listing says so. There is a section on the store page headed <em>What this is not</em>, and it sends anyone who needs arbitrary runtime cutting to buy something else. Refunds and one-star reviews come from tools sold into the wrong problem, and the cheapest place to prevent that is the page someone reads before paying.</p>
+          <p class="aside-note beat__afterword">Next version: procedural pattern generation &mdash; Voronoi, and grid or planks &mdash; written into the crack map as a single undo step. Not to replace the painting, but to give you a starting pattern you then correct where it matters.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist">How it was built</p>
+          <div class="spec">
+            <p class="spec__label">Declared on the listing</p>
+            <dl class="spec__list">
+              <div><dt>Code</dt><dd>Written partly with Claude, partly by hand &mdash; reviewed, edited and tested before release</dd></div>
+              <div><dt>Demo art</dt><dd>Generated with ChatGPT; illustrative content, not sold as art</dd></div>
+              <div><dt>At runtime</dt><dd>No AI service, no API key, no subscription &mdash; plain C# and Physics 2D, offline</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">AI in the pipeline, and said out loud</h2>
+          <p class="beat__text">I work with models the way I work with any tool in the pipeline, and I put my name on the result. On something people pay for, that means two things: reading and testing every generated line before it ships, and declaring the arrangement on the listing rather than hoping nobody asks.</p>
+          <p class="beat__text">It also means shipping full, readable C# source, so the claim is checkable. A buyer does not have to take my word for what is in the package &mdash; they can open it. That is the only version of this disclosure that is worth anything.</p>
+          <p class="beat__text">The name causes one predictable confusion, so the listing settles it too: &ldquo;Painter&rdquo; is the thing <em>you</em> do with the brush, not a claim about how the package was produced.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== The same slab, after the break ========================== -->
+<section class="range range--close">
+  <div class="range__sky" aria-hidden="true"></div>
+  <svg class="range__layers" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <g class="slab"><use href="#cp-broken"></use></g>
+  </svg>
+
+  <div class="wrap">
+    <p class="eyebrow">v1.0.0 &mdash; 24 August 2026</p>
+    <div class="rule"></div>
+    <h2 class="case-title" style="font-size: var(--size-h2)">You decide where it breaks. Everything after that is physics.</h2>
+    <p class="hero__ctas">
+      <a class="btn btn--sky" href="https://assetstore.unity.com/packages/tools/sprite-management/crack-painter-2d-sprite-shatter-break-tool-395136" target="_blank" rel="noopener">Crack Painter 2D on the Asset Store &nearr;</a>
+    </p>
+  </div>
+</section>
+
+<footer class="contact" id="contact">
+  <div class="wrap">
+    <p class="eyebrow">Contact</p>
+    <div class="rule"></div>
+
+    <h2 class="contact__title">Say hello.</h2>
+    <p class="contact__note">Open to internships and systems-design collaborations. I answer everything.</p>
+
+    <!-- The form itself lives once, on the landing page. No address in the
+         markup here either — a mailto: in a public repo gets scraped. -->
+    <p class="hero__ctas">
+      <a class="btn btn--solid" href="../../#contact">Use the contact form</a>
+    </p>
+
+    <div class="contact__links">
+      <a class="link-out backlink" href="../../#tools">&larr; All tools</a>
+      <a class="link-out" href="https://assetstore.unity.com/publishers/152882" rel="me">Asset Store &nearr;</a>
+      <a class="link-out" href="https://github.com/Ekasto" rel="me">GitHub &nearr;</a>
+      <a class="link-out" href="https://ekasto.itch.io" rel="me">itch.io &nearr;</a>
+    </div>
+
+    <div class="colophon meta">
+      <span>Set in Familjen Grotesk, IBM Plex Sans &amp; Mono. Built by me.</span>
+      <span>Berlin, Germany &mdash; &copy; 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/theme.js" defer></script>
+</body>
+</html>

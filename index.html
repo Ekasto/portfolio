@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- TODO: swap the remaining placeholders — projects, tool, media, resume.
+<!-- TODO: swap the remaining placeholders — project two, media, resume.
      Running list: planning/incomplete.md -->
 <title>Paul Schwab — game systems and the tools that tune them</title>
 <meta name="description" content="Portfolio of a game design student working in systems and technical design: Unity, C#, editor tooling, and an AI-assisted pipeline.">
@@ -181,31 +181,39 @@
         <h2 class="section__title">Shipped tools</h2>
       </div>
 
+      <!-- Unlike a project card, this one is not a single door: it has two
+           real destinations, the breakdown and the listing. Two named links
+           beat one card-sized overlay that has to swallow whichever loses. -->
       <article class="tool">
-        <h3 class="tool__name">Tool Name</h3>
-        <p class="tool__pitch">One-line pitch for the shipped tool — what it does for the person using it, in plain language rather than feature list.</p>
+        <h3 class="tool__name"><a href="./tools/crack-painter-2d/">Crack Painter 2D</a></h3>
+        <p class="tool__pitch">A Unity editor tool that breaks a 2D sprite along crack lines you paint yourself &mdash; so a crate comes apart along its planks instead of into a procedural grid.</p>
         <div class="tool__meta meta-row">
           <span>Unity Asset Store</span><span class="meta-row__sep">&middot;</span>
-          <span>Year</span><span class="meta-row__sep">&middot;</span>
-          <span>Version — status</span>
+          <span>2026</span><span class="meta-row__sep">&middot;</span>
+          <span>v1.0.0 &mdash; published</span>
         </div>
 
         <figure class="figure tool__figure">
-          <div class="ph"><span class="ph__label">16:9 — editor capture: the tool in context</span></div>
+          <img src="./assets/img/crack-painter/baker-800.webp"
+               srcset="./assets/img/crack-painter/baker-800.webp 800w, ./assets/img/crack-painter/baker.webp 1280w"
+               sizes="(min-width: 900px) 700px, 100vw" width="1280" height="720" loading="lazy" decoding="async"
+               alt="The Crack Painter 2D window in Unity: a stone wall sprite with magenta crack lines painted between the blocks, and a status bar reading “7 pieces — ready to bake”.">
           <figcaption class="figure__caption">
             <span>Fig. 04</span>
-            <span>What the capture shows</span>
+            <span>The crack map editor &mdash; pieces counted live, before the bake</span>
           </figcaption>
         </figure>
 
         <ul class="tool__points">
-          <li>First supporting point — the thing that makes it quick to adopt.</li>
-          <li>Second supporting point — where the output goes.</li>
-          <li>Third supporting point — evidence that someone else uses it.</li>
+          <li>Paint the break in Unity, on an ordinary PNG you can also open anywhere else.</li>
+          <li>One click bakes a plain prefab: SpriteRenderers, colliders, rigidbodies, no proprietary type.</li>
+          <li>Published, priced and supported on the Asset Store since August 2026.</li>
         </ul>
 
-        <!-- TODO: Asset Store listing URL. -->
-        <a class="link-out tool__link" href="#">View on the Asset Store ↗</a>
+        <p class="tool__links">
+          <a class="link-out" href="./tools/crack-painter-2d/">Read the breakdown &rarr;</a>
+          <a class="link-out" href="https://assetstore.unity.com/packages/tools/sprite-management/crack-painter-2d-sprite-shatter-break-tool-395136" target="_blank" rel="noopener">View on the Asset Store &nearr;</a>
+        </p>
       </article>
     </div>
   </section>
@@ -330,9 +338,7 @@
       <!-- TODO (incomplete): LinkedIn profile — uncomment once the profile exists.
       <a class="link-out" href="#">LinkedIn ↗</a>
       -->
-      <!-- TODO (incomplete): Unity Asset Store publisher page — uncomment once a tool is listed.
-      <a class="link-out" href="#">Unity Asset Store ↗</a>
-      -->
+      <a class="link-out" href="https://assetstore.unity.com/publishers/152882" rel="me">Unity Asset Store ↗</a>
     </div>
 
     <div class="colophon meta">

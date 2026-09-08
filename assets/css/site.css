@@ -22,6 +22,11 @@ p { text-wrap: pretty; }
 img, svg, video { max-width: 100%; height: auto; display: block; }
 ul { margin: 0; padding: 0; list-style: none; }
 
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
 ::selection { background: var(--accent); color: var(--paper); }
 
 /* --- Links and focus --------------------------------------------- */
@@ -439,6 +444,15 @@ html { scroll-behavior: smooth; }
 }
 .tool__meta { margin-top: var(--s-5); }
 .tool__figure { margin-top: var(--s-6); }
+/* A real capture sits in the same box the .ph placeholder did. Inside the
+   recessed band the fills invert, so this one grounds on --paper. */
+.tool__figure img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
 .tool__points {
   display: flex;
   flex-direction: column;
@@ -448,7 +462,15 @@ html { scroll-behavior: smooth; }
   border-top: 1px solid var(--rule);
 }
 .tool__points li { font-size: var(--size-small); color: var(--ink-2); }
-.tool__link { margin-top: var(--s-4); min-height: 48px; font-size: var(--size-meta); }
+.tool__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-8);
+  margin-top: var(--s-4);
+}
+.tool__links .link-out { min-height: 48px; font-size: var(--size-meta); }
+.tool__name a { color: var(--ink); text-decoration: none; }
+.tool__name a:hover { color: var(--accent); }
 
 /* --- Method ------------------------------------------------------ */
 .method-grid {
@@ -666,7 +688,7 @@ html { scroll-behavior: smooth; }
       "pitch   figure"
       "meta    figure"
       "points  figure"
-      "link    figure";
+      "links   figure";
     margin-top: var(--s-16);
     padding-top: var(--s-10);
   }
@@ -675,7 +697,8 @@ html { scroll-behavior: smooth; }
   .tool__meta   { grid-area: meta; margin-top: var(--s-8); }
   .tool__figure { grid-area: figure; margin-top: 0; }
   .tool__points { grid-area: points; gap: var(--s-3); margin-top: var(--s-8); padding-top: var(--s-6); }
-  .tool__link   { grid-area: link; margin-top: var(--s-6); align-self: start; font-size: 0.813rem; }
+  .tool__links  { grid-area: links; margin-top: var(--s-6); align-self: start; }
+  .tool__links .link-out { font-size: 0.813rem; }
 
   .method-grid { grid-template-columns: repeat(3, 1fr); gap: var(--s-14); margin-top: var(--s-14); }
   .method__title { margin-top: var(--s-4); }
