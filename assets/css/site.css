@@ -33,7 +33,7 @@ a {
 }
 a:hover { color: var(--accent-2); }
 
-:where(a, button, [tabindex]):focus-visible {
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
@@ -326,6 +326,15 @@ html { scroll-behavior: smooth; }
 /* The card is one component: a row of one, two or three of these
    works unchanged. The section grows by adding rows, never by
    filling holes in a fixed grid. */
+/* A real capture sits in the same box the .ph placeholder did. */
+.project__media img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+}
+
 .project__fig-no { margin-top: var(--s-4); }
 .project__title {
   margin-top: var(--s-2);
@@ -455,7 +464,9 @@ html { scroll-behavior: smooth; }
   padding-bottom: var(--s-10);
   border-top: 1px solid var(--rule);
 }
-.contact__email {
+/* The huge address is gone — see index.html — so the display line and
+   its accent rule carry the section instead. */
+.contact__title {
   display: inline-block;
   font-family: var(--font-display);
   font-size: var(--size-email);
@@ -463,12 +474,47 @@ html { scroll-behavior: smooth; }
   line-height: 1.1;
   letter-spacing: -0.025em;
   color: var(--ink);
-  text-decoration: none;
   border-bottom: 2px solid var(--accent);
   padding-bottom: 6px;
-  overflow-wrap: anywhere;
 }
-.contact__email:hover { color: var(--accent); }
+.contact-form {
+  display: grid;
+  gap: var(--s-5);
+  max-width: 46rem;
+  margin-top: var(--s-10);
+}
+.field { display: flex; flex-direction: column; gap: var(--s-2); }
+.field__label {
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.field__input {
+  min-height: var(--tap);
+  padding: var(--s-3);
+  font-family: var(--font-body);
+  font-size: var(--size-body);
+  line-height: 1.5;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  transition: border-color var(--ease);
+}
+.field__input:hover { border-color: var(--ink-2); }
+.field__area { min-height: 9rem; resize: vertical; }
+/* Honeypot: reachable to a bot reading the DOM, invisible to everyone else. */
+.field__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.contact-form__send { justify-self: start; }
+
 .contact__note {
   margin-top: var(--s-6);
   color: var(--ink-2);
@@ -592,6 +638,12 @@ html { scroll-behavior: smooth; }
 
   .contact { padding-bottom: var(--s-16); }
   .contact__note { max-width: 52ch; margin-top: var(--s-8); font-size: 1.125rem; }
+  .contact-form {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-6) var(--s-8);
+    margin-top: var(--s-12);
+  }
+  .field--wide, .contact-form__send { grid-column: 1 / -1; }
   .contact__links {
     flex-direction: row;
     flex-wrap: wrap;
