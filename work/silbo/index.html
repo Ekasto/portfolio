@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Silbo — endless runner about movement | Paul Schwab</title>
-<meta name="description" content="Case study: Silbo, a movement-led endless runner made at university with SilboCAMPZ. A shepherd crosses the ridges with his staff, whistling the scattered goats back to the herd.">
+<title>Silbo — a 2D endless runner about movement | Paul Schwab</title>
+<meta name="description" content="Case study: Silbo, a 2D endless runner built at HTW Berlin by a team of five. A shepherd flees an advancing corruption and guides a herd of goats to safety. My role: programming and technical art.">
 <meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#131312" media="(prefers-color-scheme: dark)">
 
 <meta property="og:type" content="article">
-<meta property="og:title" content="Silbo — endless runner about movement">
-<meta property="og:description" content="A movement-led endless runner made at university with SilboCAMPZ: jump, chain two actions, and whistle the scattered goats back to the herd.">
+<meta property="og:title" content="Silbo — a 2D endless runner about movement">
+<meta property="og:description" content="Built at HTW Berlin by a team of five: a shepherd flees an advancing corruption and guides a herd of goats to safety. My role — programming and technical art.">
 <meta property="og:image" content="../../assets/img/silbo/og.jpg">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23191817'/%3E%3Crect%20x='6'%20y='21'%20width='20'%20height='3'%20fill='%23bc3e0d'/%3E%3C/svg%3E">
@@ -85,6 +85,7 @@
   </div>
 </header>
 
+
 <main id="main">
 
   <!-- ===== The range the run starts in ============================= -->
@@ -95,10 +96,10 @@
     </svg>
 
     <div class="wrap">
-      <p class="eyebrow">Work &mdash; 01 &mdash; University project</p>
+      <p class="eyebrow">Work &mdash; 01 &mdash; HTW Berlin, 2026</p>
       <div class="rule"></div>
       <h1 class="game-title">Silbo</h1>
-      <p class="game-tagline">An endless runner about movement. A shepherd crosses the ridges with his staff, ahead of a dark corruption, whistling the scattered goats back to the herd.</p>
+      <p class="game-tagline">A 2D endless runner in which a shepherd flees an advancing corruption and guides a herd of goats to safety.</p>
       <p class="hero__ctas">
         <a class="btn btn--sky" href="https://silbocampz.itch.io/silbo" target="_blank" rel="noopener">Play it on itch.io &nearr;</a>
       </p>
@@ -108,10 +109,12 @@
   <section class="section" style="padding-top: var(--s-10)">
     <div class="wrap">
       <dl class="game-facts">
-        <div><dt>Role</dt><dd>Gameplay &amp; systems programming, design, tech art</dd></div>
-        <div><dt>Team</dt><dd>5 &mdash; SilboCAMPZ</dd></div>
-        <div><dt>Engine</dt><dd>Unity, C#</dd></div>
-        <div><dt>Platform</dt><dd>Windows, macOS &mdash; free</dd></div>
+        <div><dt>My role</dt><dd>Programming and technical art</dd></div>
+        <div><dt>Team</dt><dd>5 &mdash; CAMPZ</dd></div>
+        <div><dt>Built</dt><dd>May &ndash; July 2026</dd></div>
+        <div><dt>Engine</dt><dd>Unity, C# &mdash; FMOD, Git</dd></div>
+        <div><dt>Platform</dt><dd>Windows, macOS &mdash; gamepad or keyboard</dd></div>
+        <div><dt>Context</dt><dd>Game Design B.A., HTW Berlin &mdash; shown at HIVE SUMMER</dd></div>
       </dl>
     </div>
   </section>
@@ -124,175 +127,296 @@
          alt="A wide view of Silbo's landscape at sunset: rocks and flowering scrub on a ridge, a broken wooden structure, and the sun sitting low on the horizon.">
     <figcaption class="figure__caption">
       <span>Fig. 01</span>
-      <span>The islands the run is set on — rock, scrub, and the wooden bones of old herding gear</span>
+      <span>Teide National Park and Barranco de Guayadeque, combined into one biome</span>
     </figcaption>
   </figure>
 
   <section class="section">
     <div class="wrap">
-      <p class="beat__text">Silbo was a university project, made by five of us as <strong>SilboCAMPZ</strong>. It takes its name and its central mechanic from <strong>Silbo Gomero</strong>, the whistled language of La Gomera, and the rest of it from the way goats and sheep are herded across the Canary Islands. You play a shepherd running a landscape that never ends, and the reason to keep running is that the movement is good.</p>
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist">The brief</p>
+          <p class="aside-note">A playable vertical slice of a 2D game, in Unity, for PC and Mac, played on a gamepad and <strong>presented publicly at HIVE SUMMER</strong> &mdash; where visitors tested it in front of us. Judged on game feel, visual coherence, technical stability across a full session, and balancing proven through playtesting.</p>
+        </div>
+        <div class="beat__body">
+          <p class="beat__text">Silbo was built between May and July 2026 at HTW Berlin, as the joint project of three modules on our Game Design B.A. For all five of us it was the first game we had ever made in a team and carried to this level of finish.</p>
+          <p class="beat__text">It began not with a setting or a mechanic but with a <em>Desiderata</em> &mdash; a set of conditions any later idea would have to satisfy. The concrete image came from the <strong>Salto del pastor canario</strong>, the shepherd's leap of the Canary Islands, where herders vault across volcanic terrain on a long wooden staff. One practice gave us a protagonist, an environment and a gameplay focus at once.</p>
 
-      <div class="contribution">
-        <h2 class="contribution__title">What I did</h2>
-        <ul class="contribution__list">
-          <li><strong>Gameplay programming.</strong> The movement the whole game rests on — the jump, the two actions you chain into it, and the whistle that reaches out into the world around you.</li>
-          <li><strong>Systems and level generation.</strong> The run itself: terrain arriving ahead of the player, checkpoints to deliver goats to, and the distance and score that make one run comparable to the last.</li>
-          <li><strong>Design.</strong> Tuning what those verbs feel like in the hand, and how hard the landscape pushes back as the metres add up.</li>
-          <li><strong>Tech art.</strong> The look the game is remembered for: the parallax ridges, the whistle's expanding rings, and the way the palette turns over across a run.</li>
-        </ul>
-        <p class="contribution__credit">Made with Adam, Zora, Tenairi and Clara. The game is credited on itch.io as AI assisted, with AI used for code — the same way I work now: models draft, I read and own what ships.</p>
+          <div class="contribution">
+            <h2 class="contribution__title">What I did</h2>
+            <ul class="contribution__list">
+              <li><strong>A custom editor tool for the falling platforms.</strong> They had to break along the cracks drawn in the artwork. Every existing solution we found was procedural, which gave us no control over the artist's exact lines &mdash; so we built a standalone Unity tool that lets you paint the cracks straight onto the platform and drives the break from that. It has since grown into an editor tool of its own.</li>
+              <li><strong>Tuning exposed to the whole team.</strong> I made a point of surfacing the variables that mattered in the Inspector, so designers and artists could tune a feature without touching code or waiting on a programmer &mdash; which is what made playtest days usable, since values changed on the spot and repeatedly.</li>
+              <li><strong>Performance.</strong> The game ran badly on the weaker machines in the Hive. Profiling put the cost in our shaders and in the sheer volume of art on screen; optimising both is what kept it playable on something other than our own development computers.</li>
+              <li><strong>AI in the loop, reviewed by hand.</strong> We used it to plan and prototype quickly, and as a second pass over incoming work to flag edge cases &mdash; useful on critical systems like data storage. Generated code was never assumed correct: it was read and judged before it shipped.</li>
+            </ul>
+            <p class="contribution__credit">The modules covered design, art and technology at once, so everyone worked across their own discipline and most features passed through several hands. The level segments were divided among all five of us &mdash; the world the player runs through is literally built by the whole team.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== Beats. The section number is the game's own HUD: every
-       figure below is captioned with the distance actually showing in
-       that screenshot, and the run is laid out in the order you would
-       reach them. ================================================== -->
+  <!-- ===== Beats. The margin column states the mechanic as data; the
+       prose says how it feels. Distances are the game's own HUD, and the
+       run is laid out in the order you would reach them. ============= -->
 
   <section class="beat">
     <div class="wrap">
-      <div class="beat__head">
-        <p class="beat__dist"><b>1648 m</b> &mdash; the corruption</p>
-        <h2 class="beat__title">The colour goes out of the world</h2>
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist"><b>1648 m</b> &mdash; the corruption</p>
+          <div class="spec">
+            <p class="spec__label">Pursuit</p>
+            <dl class="spec__list">
+              <div><dt>Scales with</dt><dd>Distance run, and every goat handed in</dd></div>
+              <div><dt>When slow</dt><dd>Closes the gap &mdash; but never goes straight for the kill</dd></div>
+              <div><dt>Tells</dt><dd>Colour drains from the world; the ambience shifts</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">You are not being chased by a wall</h2>
+          <p class="beat__text">The corruption is a difficulty system wearing a costume. It gains ground as the run goes on, growing more insistent with every kilometre covered and every goat handed in &mdash; so the reward for playing well is a pursuer that plays better too. It closes the gap when you are slow, but it does not go straight for the kill, which keeps a bad stretch tense instead of hopeless.</p>
+          <p class="beat__text">Long before it arrives, the sound and the colour of the world announce it: the warmth drains out of the landscape and everything shifts towards black and white. Learning to read that is part of learning the game &mdash; and it means the screen tells you that you are in trouble while your hands stay busy.</p>
+          <p class="beat__text">It was not always this. Early feedback flagged the wolves we had planned as the pursuer as a tired trope, so we replaced them with something deliberately unresolved &mdash; danger that reads through half-glimpsed figures rather than a defined creature.</p>
+          <figure class="figure">
+            <img class="shot" src="../../assets/img/silbo/drained.webp"
+                 srcset="../../assets/img/silbo/drained-800.webp 800w, ../../assets/img/silbo/drained.webp 1600w"
+                 sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+                 alt="Silbo rendered entirely in greys: the shepherd stands on a stone arch beside collapsing wooden herding structures, with a white sun behind them.">
+            <figcaption class="figure__caption">
+              <span>Fig. 02 &mdash; 1648 m</span>
+              <span>The corruption close behind: same geometry, same readable silhouettes, no colour left</span>
+            </figcaption>
+          </figure>
+        </div>
       </div>
-      <p class="beat__text">What you are running from is never spelled out, and the game is better for it. The clearest thing it does with the corruption is take the colour away: the sun, the rock, the scrub and the shepherd's own staff all drop to grey, and the only thing that has not changed is that you are still moving.</p>
-      <p class="beat__text">It is a cheap effect and an enormously effective one. Nothing about the layout tells you that you are in trouble — the palette does, at a glance, while your hands stay busy.</p>
-      <figure class="figure">
-        <img class="shot" src="../../assets/img/silbo/drained.webp"
-             srcset="../../assets/img/silbo/drained-800.webp 800w, ../../assets/img/silbo/drained.webp 1600w"
-             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
-             alt="Silbo rendered entirely in greys: the shepherd stands on a stone arch beside collapsing wooden herding structures, with a white sun behind them.">
-        <figcaption class="figure__caption">
-          <span>Fig. 02 &mdash; 1648 m</span>
-          <span>Same geometry, same readable silhouettes, no colour at all</span>
-        </figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="beat">
-    <div class="wrap">
-      <div class="beat__head">
-        <p class="beat__dist"><b>2200 m</b> &mdash; the movement</p>
-        <h2 class="beat__title">One verb, and two ways to extend it</h2>
-      </div>
-      <p class="beat__text">The runner is built on a jump you can extend with two further actions, so crossing a gap is a decision rather than a reflex. The staff is the reason it reads as herding instead of platforming: the shepherd vaults on it, and that single prop carries most of the game's identity before a word is said.</p>
-      <p class="beat__text">The landscape is drawn as flat silhouettes at three depths, which keeps the platform you have to land on unmistakable even when the screen is busy — the surfaces you can stand on are always the darkest, nearest layer.</p>
-      <figure class="figure">
-        <img class="shot" src="../../assets/img/silbo/hero.webp"
-             srcset="../../assets/img/silbo/hero-800.webp 800w, ../../assets/img/silbo/hero.webp 1600w"
-             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
-             alt="The white shepherd stands with his staff on a narrow rock pillar at dusk, an orange sky behind him and a wooden wheel silhouetted against the setting sun.">
-        <figcaption class="figure__caption">
-          <span>Fig. 03 &mdash; 2200 m</span>
-          <span>Three depths of silhouette; the landable surface is always the nearest one</span>
-        </figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="beat">
-    <div class="wrap">
-      <div class="beat__head">
-        <p class="beat__dist"><b>2289 m</b> &mdash; the whistle</p>
-        <h2 class="beat__title">The mechanic the game is named after</h2>
-      </div>
-      <p class="beat__text">On La Gomera, shepherds talk across valleys in <strong>Silbo Gomero</strong> — a whistled form of Spanish that carries where a voice will not. That is the game's title and it is also its second input. The whistle is how you reach past the edge of your own jump: it opens things up, and it is how the goats know where you are.</p>
-      <p class="beat__text">On screen it is three expanding rings, and the bells strung along the herding frames light up as the rings pass through them. It costs almost nothing to draw and it makes an invisible mechanic legible — you can see exactly how far your whistle just carried.</p>
-      <figure class="figure">
-        <img class="shot" src="../../assets/img/silbo/whistle.webp"
-             srcset="../../assets/img/silbo/whistle-800.webp 800w, ../../assets/img/silbo/whistle.webp 1600w"
-             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
-             alt="Three white rings expand outward from the leaping shepherd across a pink sky, passing through a row of hanging bells that glow pale blue.">
-        <figcaption class="figure__caption">
-          <span>Fig. 04 &mdash; 2289 m</span>
-          <span>The whistle drawn as range: the bells inside the rings answer it</span>
-        </figcaption>
-      </figure>
     </div>
   </section>
 
   <section class="beat">
     <div class="wrap">
-      <div class="beat__head">
-        <p class="beat__dist"><b>2539 m</b> &mdash; the herd</p>
-        <h2 class="beat__title">Your score is a line of goats behind you</h2>
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist"><b>2200 m</b> &mdash; the movement</p>
+          <div class="spec">
+            <p class="spec__label">The move set</p>
+            <dl class="spec__list">
+              <div><dt>Vault</dt><dd>A forward leap on the staff, in a low arc</dd></div>
+              <div><dt>Dash</dt><dd>Extends that arc in the air</dd></div>
+              <div><dt>Jump</dt><dd>Stacks on top of both</dd></div>
+              <div><dt>Slope</dt><dd>Ride downhill to gather speed</dd></div>
+              <div><dt>Bounce</dt><dd>Strike the staff on landing to turn a fall into height</dd></div>
+              <div><dt>Payout</dt><dd>A clean chain builds a combo, which grants a wind shield</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">Every verb is a link in a chain</h2>
+          <p class="beat__text">None of these actions is interesting alone. That is the design: they exist to be strung together, and chaining them cleanly answers precision with momentum. Hold a combo alive and you are given a wind shield that destroys whatever is in your path, so the speed you built survives contact with the world.</p>
+          <p class="beat__text">That is the whole difference between a cautious run and a fast one. The game is at its best in the state where the terrain reads itself and every input lands where it should &mdash; and everything else is arranged to make that state reachable.</p>
+          <figure class="figure">
+            <img class="shot" src="../../assets/img/silbo/hero.webp"
+                 srcset="../../assets/img/silbo/hero-800.webp 800w, ../../assets/img/silbo/hero.webp 1600w"
+                 sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+                 alt="The white shepherd stands with his staff on a narrow rock pillar at dusk, an orange sky behind him and a wooden wheel silhouetted against the setting sun.">
+            <figcaption class="figure__caption">
+              <span>Fig. 03 &mdash; 2200 m</span>
+              <span>Stylised on purpose: paths and platforms have to stay readable at speed</span>
+            </figcaption>
+          </figure>
+        </div>
       </div>
-      <p class="beat__text">Goats are scattered along the route, and getting one is only half of it — you then have to carry it to the next checkpoint without losing it. So the thing you are protecting is visible at all times: the goats fall into a line behind the shepherd and jump the gaps you jump, and a bad landing is expensive in a way you can see rather than read.</p>
-      <p class="beat__text">The count is carved into the rock as a petroglyph, next to painted goats and a painted herder, so even the score readout is doing atmospheric work instead of sitting in a corner of the HUD.</p>
-      <figure class="figure">
-        <img class="shot" src="../../assets/img/silbo/herd.webp"
-             srcset="../../assets/img/silbo/herd-800.webp 800w, ../../assets/img/silbo/herd.webp 1600w"
-             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
-             alt="Under a starry night sky the shepherd leaps with five goats trailing behind him in a line, towards a rock face covered in glowing blue cave paintings of goats and a large number five.">
-        <figcaption class="figure__caption">
-          <span>Fig. 05 &mdash; 2539 m</span>
-          <span>Five rescued, and the count painted on the rock rather than printed on the HUD</span>
-        </figcaption>
-      </figure>
     </div>
   </section>
 
   <section class="beat">
     <div class="wrap">
-      <div class="beat__head">
-        <p class="beat__dist"><b>3228 m</b> &mdash; first light</p>
-        <h2 class="beat__title">The sky keeps score too</h2>
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist"><b>2289 m</b> &mdash; the whistle</p>
+          <div class="spec">
+            <p class="spec__label">What the whistle does</p>
+            <dl class="spec__list">
+              <div><dt>Herd</dt><dd>Calls scattered goats to the player</dd></div>
+              <div><dt>Terrain</dt><dd>Platforms rise from the ground or sink back into it</dd></div>
+              <div><dt>Structures</dt><dd>Wooden platforms open and close</dd></div>
+              <div><dt>Chimes</dt><dd>Catching the ring restores an air combo and pushes the corruption back</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">A language, used as an input</h2>
+          <p class="beat__text">On La Gomera, shepherds talk across ravines too wide to cross in <strong>Silbo Gomero</strong>, a whistled form of Spanish. We built the mechanic first and realised only afterwards that it had been holding our title the whole time &mdash; for most of the project the working name was <em>The Goat</em>.</p>
+          <p class="beat__text">The whistle is what turns running through a landscape into communicating with one. It calls the herd, and it sets the world moving. Striking a wind chime and catching its ring mid-flight restores an aerial combo and pushes the corruption back for a moment, which makes a chain of chimes both a route and a reprieve.</p>
+          <p class="beat__text">The sound was tuned to be satisfying on its own, and the result is that players reach for the chimes before they understand what they do &mdash; the mechanic teaches itself through the audio rather than through a prompt.</p>
+          <figure class="figure">
+            <img class="shot" src="../../assets/img/silbo/whistle.webp"
+                 srcset="../../assets/img/silbo/whistle-800.webp 800w, ../../assets/img/silbo/whistle.webp 1600w"
+                 sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+                 alt="Three white rings expand outward from the leaping shepherd across a pink sky, passing through a row of hanging bells that glow pale blue.">
+            <figcaption class="figure__caption">
+              <span>Fig. 04 &mdash; 2289 m</span>
+              <span>The whistle drawn as range: the chimes inside the rings answer it</span>
+            </figcaption>
+          </figure>
+        </div>
       </div>
-      <p class="beat__text">Line the captures up by distance and the sky runs forward with them: dusk at 2200 m, deep pink at 2289 m, full night at 2539 m, and the first cold blue of morning by 3228 m. In a game with no level numbers and no map, the colour of the sky is the only progress bar there is — and it is the one that makes a long run feel like it went somewhere.</p>
-      <p class="beat__text">This is the far end of the loop the game is built for: an endless runner with a high-score table, where the thing you are actually chasing is a sky you have not seen yet.</p>
-      <figure class="figure">
-        <img class="shot" src="../../assets/img/silbo/bells.webp"
-             srcset="../../assets/img/silbo/bells-800.webp 800w, ../../assets/img/silbo/bells.webp 1600w"
-             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
-             alt="Pre-dawn blue light over a row of low wind-bent trees hung with bells, thorny growth along the ground, the shepherd and a goat running beneath them.">
-        <figcaption class="figure__caption">
-          <span>Fig. 06 &mdash; 3228 m</span>
-          <span>Same rules, four kilometres later, under a sky you had to earn</span>
-        </figcaption>
-      </figure>
     </div>
   </section>
 
   <section class="beat">
     <div class="wrap">
-      <div class="beat__head">
-        <p class="beat__dist">In motion</p>
-        <h2 class="beat__title">What it looks like moving</h2>
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist"><b>2539 m</b> &mdash; the herd</p>
+          <div class="spec">
+            <p class="spec__label">The loop</p>
+            <dl class="spec__list">
+              <div><dt>Find</dt><dd>Their &ldquo;maa&rdquo; gives away the position before they are visible</dd></div>
+              <div><dt>Collect</dt><dd>Each goat makes the player faster</dd></div>
+              <div><dt>Take a hit</dt><dd>Part of the herd scatters again</dd></div>
+              <div><dt>Hand in</dt><dd>At a checkpoint, speed becomes a permanent boost</dd></div>
+              <div><dt>Then</dt><dd>A downhill stretch where the corruption holds back</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">The herd is your speed, and your risk</h2>
+          <p class="beat__text">Goats make you faster, which makes the corruption easier to outrun &mdash; but a careless hit scatters part of the herd again, so the advantage is never entirely safe until you reach a checkpoint. Handing them in converts something fragile into something secure, and the run starts gathering from zero once more.</p>
+          <p class="beat__text">The moment is deliberately generous: a downhill stretch follows where the pursuit eases and you can breathe. It is the only rest the game gives, and it is given for playing well rather than for surviving.</p>
+          <p class="beat__text">The checkpoints themselves are stone structures covered in paintings &mdash; constructed shapes that stand apart from the natural rock as signs of civilisation in the wilderness. They show a relationship with the mountains and the herd without explaining the history behind them, leaving traces for the player to read instead.</p>
+          <figure class="figure">
+            <img class="shot" src="../../assets/img/silbo/herd.webp"
+                 srcset="../../assets/img/silbo/herd-800.webp 800w, ../../assets/img/silbo/herd.webp 1600w"
+                 sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+                 alt="Under a starry night sky the shepherd leaps with five goats trailing behind him in a line, towards a checkpoint rock face covered in glowing blue paintings of goats and a large number five.">
+            <figcaption class="figure__caption">
+              <span>Fig. 05 &mdash; 2539 m</span>
+              <span>Five gathered, approaching a checkpoint &mdash; the count painted on the rock, not printed on the HUD</span>
+            </figcaption>
+          </figure>
+        </div>
       </div>
-      <figure class="figure clip">
-        <!-- Click-to-play rather than autoplay: it is the accessible default,
-             and it is the one that respects a reduced-motion preference
-             without needing script to do it. -->
-        <video src="../../assets/img/silbo/gameplay.mp4" width="640" height="360"
-               controls loop muted playsinline preload="metadata"
-               poster="../../assets/img/silbo/gameplay-poster.webp"
-               aria-label="A short looping clip of Silbo: the shepherd running and jumping up a mountainside at dusk, past falling rock pillars.">
-          <a href="../../assets/img/silbo/gameplay.mp4">Download the gameplay clip (MP4)</a>
-        </video>
-        <figcaption class="figure__caption">
-          <span>Fig. 07</span>
-          <span>Climbing a mountainside at dusk &mdash; captured at the game's own 320&times;180</span>
-        </figcaption>
-      </figure>
     </div>
   </section>
 
   <section class="beat">
     <div class="wrap">
-      <div class="beat__head">
-        <p class="beat__dist">Credits</p>
-        <h2 class="beat__title">Made by five people</h2>
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist"><b>3228 m</b> &mdash; the world</p>
+          <div class="spec">
+            <p class="spec__label">The generator</p>
+            <dl class="spec__list">
+              <div><dt>Unit</dt><dd>A hand-built chunk, blocked out and playtested before art</dd></div>
+              <div><dt>Rated</dt><dd>Each chunk carries a difficulty value</dd></div>
+              <div><dt>Curve</dt><dd>Rises with distance, easing periodically so it stays fun rather than exhausting</dd></div>
+              <div><dt>Day</dt><dd>Dawn &rarr; midday &rarr; evening &rarr; night, ending at a checkpoint</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">A route assembled at runtime</h2>
+          <p class="beat__text">The world is put together as you run from modular sections called chunks, so no two runs are the same. Each was blocked out and playtested for paths, jumps and flow before any art went in, then dressed with modular assets, given a single collider for the whole chunk, and finally populated with plants, shaders and animation.</p>
+          <p class="beat__text">The terrain punishes inattention: cacti, erupting geysers, plants that swing and knock you down &mdash; though those can be turned to your advantage &mdash; platforms that give way underfoot, and others that appear only when called.</p>
+          <p class="beat__text">Over the run the light moves from dawn through midday and evening into night. We added the cycle so the journey would feel longer and more meaningful without dividing the world into levels: with no level numbers and no map, the colour of the sky is the only progress bar there is.</p>
+          <figure class="figure">
+            <img class="shot" src="../../assets/img/silbo/bells.webp"
+                 srcset="../../assets/img/silbo/bells-800.webp 800w, ../../assets/img/silbo/bells.webp 1600w"
+                 sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+                 alt="Pre-dawn blue light over a row of low wind-bent trees hung with chimes, thorny growth along the ground, the shepherd and a goat running beneath them.">
+            <figcaption class="figure__caption">
+              <span>Fig. 06 &mdash; 3228 m</span>
+              <span>Same rules, three kilometres later, under a sky you had to earn</span>
+            </figcaption>
+          </figure>
+        </div>
       </div>
-      <p class="beat__text">Silbo is a SilboCAMPZ project. It is still listed as in development, and it is free.</p>
-      <ul class="credits">
-        <li>Adam</li>
-        <li>Zora</li>
-        <li>Tenairi</li>
-        <li>Clara</li>
-        <li>Paul Schwab (Ekasto)</li>
-      </ul>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist">The cut</p>
+          <div class="spec">
+            <p class="spec__label">Prototype &rarr; ship</p>
+            <dl class="spec__list">
+              <div><dt>Cut</dt><dd>Skill checks, an AI goat you could direct, puzzles, discrete levels, the roguelite loop, wolves</dd></div>
+              <div><dt>Kept</dt><dd>The pursuit, the herd, the flow of movement</dd></div>
+              <div><dt>Became</dt><dd>An endless runner driven by a world generator</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">The version we did not make</h2>
+          <p class="beat__text">The earliest prototype was a different game. It had skill checks, and an AI goat the player could communicate with to change the terrain, perform movement abilities and solve small puzzles &mdash; all of it meant to combine into a loop with roguelite elements.</p>
+          <p class="beat__text">Coaching sessions warned us we were overscoping, and pushed us towards the player and the movement rather than the goat, the puzzles or individual levels. The suggestion that the player simply needed more distance to run is what turned the project into an endless runner. The roguelite, the AI goat and the puzzles fell away; the pursuit, the herd and the flow of movement stayed.</p>
+          <p class="beat__text">We worked prototype-first for exactly this reason. Where we were unsure about a feature we built it rather than argued about it, often several ways at once, and judged the versions by how they actually played. Playtesting was mostly watching people rather than handing them a form &mdash; from players with almost no experience to very experienced ones, since the goal was something easy to learn and hard to master.</p>
+          <p class="aside-note beat__afterword">The roguelite idea is not dead: the plan is to bring it back, with the goats you rescue as the currency you upgrade with before setting off again.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist">In motion</p>
+          <div class="spec">
+            <p class="spec__label">Ending a run</p>
+            <dl class="spec__list">
+              <div><dt>Opening</dt><dd>The same short stretch every time, asking for the leap, the whistle and the herd once each. After that the game stops explaining itself</dd></div>
+              <div><dt>Ends when</dt><dd>The corruption reaches you</dd></div>
+              <div><dt>Recorded</dt><dd>Distance travelled and goats brought to safety, on a leaderboard against every other attempt</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">What it looks like moving</h2>
+          <figure class="figure clip">
+            <!-- Click-to-play rather than autoplay: it is the accessible default,
+                 and it respects a reduced-motion preference without needing script. -->
+            <video src="../../assets/img/silbo/gameplay.mp4" width="640" height="360"
+                   controls loop muted playsinline preload="metadata"
+                   poster="../../assets/img/silbo/gameplay-poster.webp"
+                   aria-label="A short looping clip of Silbo: the shepherd running and jumping up a mountainside at dusk, past falling rock pillars.">
+              <a href="../../assets/img/silbo/gameplay.mp4">Download the gameplay clip (MP4)</a>
+            </video>
+            <figcaption class="figure__caption">
+              <span>Fig. 07</span>
+              <span>Climbing a mountainside at dusk</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__grid">
+        <div class="beat__aside">
+          <p class="beat__dist">Credits</p>
+          <p class="aside-note">The team formed during the ideation exercises rather than by assignment, and took its name from the first letter of each member's name: <strong>CAMPZ</strong>.</p>
+        </div>
+        <div class="beat__body">
+          <h2 class="beat__title">Made by five students</h2>
+          <p class="beat__text">Silbo is what came out of our first semester of building a game together. It is free, still in development, and it was first played in public at HIVE SUMMER.</p>
+          <dl class="spec__list credits-list">
+            <div><dt>Clara Gans</dt><dd>Character animation and visual effects</dd></div>
+            <div><dt>Adam Atrash</dt><dd>Game systems, sound design, and soundtrack</dd></div>
+            <div><dt>Marie Janssen</dt><dd>User interface and visual effects</dd></div>
+            <div><dt>Paul Schwab</dt><dd>Programming and technical art</dd></div>
+            <div><dt>Zora Fesser</dt><dd>Environment art, level art, and visual effects</dd></div>
+          </dl>
+          <p class="aside-note beat__afterword">Supervised by Susanne Brandhorst, Thomas Bremer, Jules Pommier, Johannes Witt and Sebastian Plesch, whose coaching repeatedly steered us away from decisions we had grown too close to see clearly.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -322,7 +446,7 @@
   <div class="wrap">
     <p class="eyebrow">End of the run</p>
     <div class="rule"></div>
-    <h2 class="game-title" style="font-size: var(--size-h2)">It is free, and it runs about four kilometres before the sky turns.</h2>
+    <h2 class="game-title" style="font-size: var(--size-h2)">Every run ends the same way. What is left is the distance, and the goats you got home.</h2>
     <p class="hero__ctas">
       <a class="btn btn--sky" href="https://silbocampz.itch.io/silbo" target="_blank" rel="noopener">Play Silbo on itch.io &nearr;</a>
     </p>

@@ -196,12 +196,17 @@ body.game { overflow-x: clip; }
 .game-facts dd { margin: 0; font-size: var(--size-small); }
 
 /* --- Case-study body ---------------------------------------------- */
-.beat { padding-top: var(--space-section); }
-.beat__head { padding-top: var(--s-4); border-top: 1px solid var(--rule); }
+/* A beat is a narrow margin column and a wide text column. The margin
+   column carries the distance marker and a short spec block, which is
+   what keeps it from reading as a hole: an editorial margin only works
+   when it holds marginalia. Empty, it is just a gap the eye falls into. */
+.beat { padding-top: clamp(3.5rem, 1.5rem + 5.5vw, 5.5rem); }
 
 /* The section counter is the game's own HUD: every number below is the
    distance actually shown in the screenshot beside it. */
 .beat__dist {
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
   font-family: var(--font-mono);
   font-size: var(--size-eyebrow);
   letter-spacing: var(--track-eyebrow);
@@ -211,6 +216,7 @@ body.game { overflow-x: clip; }
 .beat__dist b { color: var(--accent); font-weight: 500; }
 
 .beat__title {
+  margin-top: var(--s-5);
   font-family: var(--font-display);
   font-size: var(--size-h2);
   font-weight: 600;
@@ -224,7 +230,68 @@ body.game { overflow-x: clip; }
   line-height: 1.6;
 }
 .beat__text + .beat__text { margin-top: var(--s-5); }
-.beat .figure { margin-top: var(--s-8); }
+.beat .figure { margin-top: var(--s-10); }
+
+/* --- Margin notes ------------------------------------------------- */
+/* Mono spec blocks: the mechanic stated as data, beside the prose that
+   describes how it feels. Reads as rigour, and it earns the column. */
+.spec { margin-top: var(--s-6); }
+.spec__label {
+  padding-bottom: var(--s-2);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+/* Label above value, not beside it: the margin column is ~340px, and a
+   side-by-side term list wraps badly at that width. */
+.spec__list { margin-top: var(--s-3); }
+.spec__list div {
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--rule);
+}
+.spec__list dt {
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.spec__list dd {
+  margin: var(--s-1) 0 0;
+  font-size: var(--size-small);
+  line-height: 1.45;
+}
+
+/* A short line in the margin, used where a spec table would be too much. */
+.aside-note {
+  margin-top: var(--s-6);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+  font-size: var(--size-small);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.aside-note strong { color: var(--ink); font-weight: 500; }
+
+/* The same note used as a closing line under prose rather than in the
+   margin, so it stays inside the text measure. */
+.beat__afterword { max-width: var(--measure); }
+
+/* The credits sit in the wide column, so here the term list can go back
+   to name-beside-role. */
+.credits-list { margin-top: var(--s-6); max-width: var(--measure); }
+.credits-list div { display: flex; gap: var(--s-4); align-items: baseline; }
+.credits-list dt {
+  flex: 0 0 auto;
+  min-width: 11em;
+  font-size: var(--size-small);
+  letter-spacing: var(--track-mono);
+  color: var(--ink);
+}
+.credits-list dd { margin: 0; }
 
 /* --- The contribution box ----------------------------------------- */
 /* The one block a hiring reader must not be able to skip. */
@@ -327,18 +394,31 @@ body.game { overflow-x: clip; }
   .game-tagline { margin-top: var(--s-6); font-size: 1.25rem; }
 
   .game-facts {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--s-8);
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-6) var(--s-8);
     padding-top: var(--s-8);
   }
 
-  .beat__head { display: grid; grid-template-columns: 5fr 7fr; gap: var(--s-14); align-items: start; }
-  .beat__title { grid-column: 2; grid-row: 1; }
-  .beat__dist  { grid-column: 1; grid-row: 1; padding-top: 0.5em; }
-  .beat__text  { margin-left: calc((100% - var(--s-14)) * 5 / 12 + var(--s-14)); }
+  /* Narrow margin column, wide text column. The figure sits outside the
+     grid and runs the full width, so each beat reads: notes and prose
+     side by side, then the capture across everything. */
+  .beat__grid {
+    display: grid;
+    grid-template-columns: 3.4fr 8.6fr;
+    column-gap: var(--s-12);
+    align-items: start;
+  }
+  .beat__aside { grid-column: 1; }
+  .beat__body  { grid-column: 2; }
+
+  /* The distance marker belongs to the margin column, and the rule over
+     the title lines the two columns up at the top. */
+  .beat__body .beat__title { margin-top: 0; padding-top: var(--s-4); border-top: 1px solid var(--rule); }
+  .beat__text { font-size: 1.125rem; }
 
   .contribution { padding: var(--s-10); }
   .contribution__list { gap: var(--s-4); margin-top: var(--s-6); }
 
-  .clip { margin-left: calc((100% - var(--s-14)) * 5 / 12 + var(--s-14)); }
+  /* The clip already sits in the body column of .beat__grid, so it needs
+     no indent of its own — only its own width. */
 }
