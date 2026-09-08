@@ -293,47 +293,98 @@ body.game { overflow-x: clip; }
 }
 .credits-list dd { margin: 0; }
 
-/* --- The contribution box ----------------------------------------- */
-/* The one block a hiring reader must not be able to skip. */
+/* --- What I did: the contribution ledger --------------------------- */
+/* The one block a hiring reader must not be able to skip.
+   It is deliberately not a box. On a page built from hairlines, mono
+   labels and open columns, a filled panel with a coloured edge reads as
+   a sidebar — and a sidebar is the one thing this block must not look
+   like. It is set apart by weight instead: the only rule on the page
+   drawn in ink rather than grey, the only numerals in the accent, and
+   the only section that breaks the two-column beat rhythm to run the
+   full width. Distinct, without being fenced off. */
 .contribution {
   margin-top: var(--space-section);
-  padding: var(--s-6);
-  background: var(--paper-2);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--accent);
+  padding-top: var(--s-5);
+  border-top: 2px solid var(--ink);
+}
+.contribution__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3) var(--s-8);
 }
 .contribution__title {
   font-family: var(--font-display);
-  font-size: var(--size-h3);
+  font-size: var(--size-h2);
   font-weight: 600;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
 }
-.contribution__list {
+.contribution__role {
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* Numbers come from a counter, so the rows can be reordered or added to
+   without renumbering anything by hand. */
+.ledger {
+  counter-reset: ledger;
+  margin: var(--s-8) 0 0;
+  padding: 0;
+  /* The site reset only clears <ul>; this is an <ol>, so its default
+     markers would sit beside the counter numerals. */
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+.ledger__row {
+  counter-increment: ledger;
+  padding: var(--s-6) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ledger__mark {
   display: flex;
-  flex-direction: column;
+  align-items: baseline;
   gap: var(--s-3);
-  margin-top: var(--s-5);
 }
-.contribution__list li {
-  position: relative;
-  padding-left: var(--s-5);
+.ledger__no {
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--accent);
+}
+.ledger__no::before { content: counter(ledger, decimal-leading-zero); }
+.ledger__tag {
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.ledger__title {
+  margin-top: var(--s-3);
+  font-family: var(--font-display);
+  font-size: var(--size-method);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+/* Full ink, not the muted secondary: this is the most important prose on
+   the page and it should not sit lighter than the beats around it. */
+.ledger__text {
   max-width: var(--measure);
+  margin-top: var(--s-3);
 }
-.contribution__list li::before {
-  content: "";
-  position: absolute;
-  top: 0.62em;
-  left: 0;
-  width: 12px;
-  height: 2px;
-  background: var(--accent);
-}
+
 .contribution__credit {
   max-width: var(--measure);
-  margin-top: var(--s-6);
-  padding-top: var(--s-4);
-  border-top: 1px solid var(--rule);
+  margin-top: var(--s-8);
   font-size: var(--size-small);
   color: var(--ink-2);
 }
@@ -416,8 +467,24 @@ body.game { overflow-x: clip; }
   .beat__body .beat__title { margin-top: 0; padding-top: var(--s-4); border-top: 1px solid var(--rule); }
   .beat__text { font-size: 1.125rem; }
 
-  .contribution { padding: var(--s-10); }
-  .contribution__list { gap: var(--s-4); margin-top: var(--s-6); }
+  /* The mark moves into the margin column, so the numbers line up with
+     the distance markers running down the rest of the page. */
+  .ledger__row {
+    display: grid;
+    grid-template-columns: 3.4fr 8.6fr;
+    column-gap: var(--s-12);
+    align-items: start;
+    padding: var(--s-8) 0;
+  }
+  .ledger__mark { flex-direction: column; gap: var(--s-2); }
+  .ledger__no { font-size: 1.5rem; }
+  .ledger__title { margin-top: 0; }
+  .ledger__text { margin-top: var(--s-4); font-size: 1.0625rem; }
+
+  /* Line the credit up under the prose rather than under the numbers. */
+  .contribution__credit {
+    margin-left: calc((100% - var(--s-12)) * 3.4 / 12 + var(--s-12));
+  }
 
   /* The clip already sits in the body column of .beat__grid, so it needs
      no indent of its own — only its own width. */

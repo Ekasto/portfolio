@@ -142,18 +142,54 @@
           <p class="beat__text">Silbo was built between May and July 2026 at HTW Berlin, as the joint project of three modules on our Game Design B.A. For all five of us it was the first game we had ever made in a team and carried to this level of finish.</p>
           <p class="beat__text">It began not with a setting or a mechanic but with a <em>Desiderata</em> &mdash; a set of conditions any later idea would have to satisfy. The concrete image came from the <strong>Salto del pastor canario</strong>, the shepherd's leap of the Canary Islands, where herders vault across volcanic terrain on a long wooden staff. One practice gave us a protagonist, an environment and a gameplay focus at once.</p>
 
-          <div class="contribution">
-            <h2 class="contribution__title">What I did</h2>
-            <ul class="contribution__list">
-              <li><strong>A custom editor tool for the falling platforms.</strong> They had to break along the cracks drawn in the artwork. Every existing solution we found was procedural, which gave us no control over the artist's exact lines &mdash; so we built a standalone Unity tool that lets you paint the cracks straight onto the platform and drives the break from that. It has since grown into an editor tool of its own.</li>
-              <li><strong>Tuning exposed to the whole team.</strong> I made a point of surfacing the variables that mattered in the Inspector, so designers and artists could tune a feature without touching code or waiting on a programmer &mdash; which is what made playtest days usable, since values changed on the spot and repeatedly.</li>
-              <li><strong>Performance.</strong> The game ran badly on the weaker machines in the Hive. Profiling put the cost in our shaders and in the sheer volume of art on screen; optimising both is what kept it playable on something other than our own development computers.</li>
-              <li><strong>AI in the loop, reviewed by hand.</strong> We used it to plan and prototype quickly, and as a second pass over incoming work to flag edge cases &mdash; useful on critical systems like data storage. Generated code was never assumed correct: it was read and judged before it shipped.</li>
-            </ul>
-            <p class="contribution__credit">The modules covered design, art and technology at once, so everyone worked across their own discipline and most features passed through several hands. The level segments were divided among all five of us &mdash; the world the player runs through is literally built by the whole team.</p>
-          </div>
         </div>
       </div>
+
+      <!-- Runs the full width, breaking the two-column beat rhythm: this
+           is the block that must not be skipped, so it is the one that
+           behaves differently. -->
+      <section class="contribution">
+        <div class="contribution__head">
+          <h2 class="contribution__title">What I did</h2>
+          <p class="contribution__role">Programming &amp; technical art</p>
+        </div>
+
+        <ol class="ledger">
+          <li class="ledger__row">
+            <p class="ledger__mark"><span class="ledger__no"></span><span class="ledger__tag">Tooling</span></p>
+            <div class="ledger__body">
+              <h3 class="ledger__title">A crack-painting tool for the falling platforms</h3>
+              <p class="ledger__text">They had to break along the cracks drawn in the artwork. Every existing solution we found was procedural, which gave us no control over the artist's exact lines &mdash; so we built a standalone Unity tool that lets you paint the cracks straight onto the platform and drives the break from that. It has since grown into an editor tool of its own.</p>
+            </div>
+          </li>
+
+          <li class="ledger__row">
+            <p class="ledger__mark"><span class="ledger__no"></span><span class="ledger__tag">Workflow</span></p>
+            <div class="ledger__body">
+              <h3 class="ledger__title">Tuning the whole team could reach</h3>
+              <p class="ledger__text">I made a point of surfacing the variables that mattered in the Inspector, so designers and artists could tune a feature without touching code or waiting on a programmer. That is what made playtest days usable, since values changed on the spot and repeatedly.</p>
+            </div>
+          </li>
+
+          <li class="ledger__row">
+            <p class="ledger__mark"><span class="ledger__no"></span><span class="ledger__tag">Performance</span></p>
+            <div class="ledger__body">
+              <h3 class="ledger__title">Making it run on the weakest machine in the room</h3>
+              <p class="ledger__text">The game ran badly on some of the Hive's computers. Profiling put the cost in our shaders and in the sheer volume of art on screen; optimising both is what kept it playable on something other than our own development machines &mdash; which mattered, because strangers played it on hardware we did not choose.</p>
+            </div>
+          </li>
+
+          <li class="ledger__row">
+            <p class="ledger__mark"><span class="ledger__no"></span><span class="ledger__tag">Process</span></p>
+            <div class="ledger__body">
+              <h3 class="ledger__title">AI in the loop, reviewed by hand</h3>
+              <p class="ledger__text">We used it to plan and prototype quickly, and as a second pass over incoming work to flag edge cases &mdash; useful on critical systems like data storage, where a mistake spreads. Generated code was never assumed correct: it was read and judged before it shipped.</p>
+            </div>
+          </li>
+        </ol>
+
+        <p class="contribution__credit">The modules covered design, art and technology at once, so everyone worked across their own discipline and most features passed through several hands. The level segments were divided among all five of us &mdash; the world the player runs through is literally built by the whole team.</p>
+      </section>
     </div>
   </section>
 
