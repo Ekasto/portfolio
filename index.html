@@ -286,14 +286,10 @@
     <p class="contact__note">Open to internships and systems-design collaborations. I answer everything.</p>
 
     <!-- The address is deliberately absent from the markup: a mailto: in a
-         public repo gets scraped within days. This form posts to a relay
-         service that forwards to the inbox, so the page never carries it.
-
-         TODO: create the form at https://formspree.io (free tier), then put
-         its endpoint in action= below. Until that is done the form has
-         nowhere to send. Any drop-in POST service works the same way
-         (Web3Forms, FormSubmit) — only the action URL changes. -->
-    <form class="contact-form" action="https://formspree.io/f/FORM_ID_TODO" method="post">
+         public repo gets scraped within days. Formspree takes the POST and
+         forwards it to the inbox, so the page never carries the address.
+         The form id below is public by design and reveals nothing. -->
+    <form class="contact-form" action="https://formspree.io/f/mqpkyrlr" method="post">
       <div class="field">
         <label class="field__label" for="cf-name">Name</label>
         <input class="field__input" id="cf-name" name="name" type="text" autocomplete="name" required>
