@@ -1,0 +1,344 @@
+/* ------------------------------------------------------------------
+   game.css — the per-game case-study skin.
+
+   The site chrome (header, footer, type, rules) stays exactly as it is
+   on the landing page. What changes per game is a small set of colour
+   variables and the two full-bleed "ranges" that open and close the
+   page. Every game gets its own palette block; the components below
+   read only from those variables, so a second game is a new block of
+   --game-* values and nothing else.
+
+   Silbo's values are sampled from the game's own screenshots.
+   ------------------------------------------------------------------ */
+
+.game {
+  /* Sunset — the sky the run starts in. */
+  --game-sky-1:  #e2624c;
+  --game-sky-2:  #eb8060;
+  --game-sky-3:  #f0a578;
+  --game-sun:    #ffe7c4;
+
+  /* Night — the sky the run ends in. */
+  --game-night-1: #101c34;
+  --game-night-2: #172541;
+  --game-night-3: #2b3350;
+
+  /* Rock, in the two ranges. */
+  --game-far:    #c9694f;
+  --game-mid:    #8f4632;
+  --game-far-n:  #26304d;
+  --game-mid-n:  #171f36;
+
+  --game-ink:    #f2efe9;   /* the shepherd's white, for text on sky */
+}
+
+/* 100vw counts the scrollbar, so a full-bleed band overhangs the page by
+   its width. Clip rather than hide: clip does not make the body a scroll
+   container, so anchor links and focus scrolling still behave. */
+body.game { overflow-x: clip; }
+
+/* --- The ranges --------------------------------------------------- */
+/* Full-bleed out of .wrap without causing a horizontal scrollbar. */
+.range {
+  position: relative;
+  width: 100vw;
+  margin-left: 50%;
+  translate: -50% 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* The sky is painted on the band; the ridges sit on top of it. The
+   nearest ridge is filled with --paper, so the page itself is the
+   closest mountain and the content rises straight out of the range.
+   That also means the join needs no seam and themes for free. */
+.range__sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.range__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Ridges distort a little on very wide screens. These are soft, rounded
+   hills, so stretching reads as distance rather than as a mistake. */
+.range__layers {
+  position: absolute;
+  right: 0;
+  bottom: -1px;   /* kills the hairline some browsers leave under a path */
+  left: 0;
+  height: 58%;
+  z-index: -1;
+}
+
+/* The ridge geometry is defined once, in a <defs> group, and placed by
+   <use> in both bands. Custom properties inherit into the shadow tree
+   that <use> creates, so each band recolours the same range. */
+.range--open  { --layer-far: var(--game-far);   --layer-mid: var(--game-mid);   --layer-near: var(--paper); }
+.range--close { --layer-far: var(--game-far-n); --layer-mid: var(--game-mid-n); --layer-near: var(--paper); }
+
+/* --- Opening range ------------------------------------------------ */
+.range--open {
+  min-height: clamp(340px, 52vh, 560px);
+  display: flex;
+  align-items: flex-start;
+  padding-top: var(--s-10);
+  padding-bottom: clamp(3rem, 12vw, 7rem);
+  margin-top: var(--s-6);
+}
+/* The low sun sits where it sits in the game's own dusk shot: just above
+   the ridgeline, right of centre.
+
+   The scrim on top is not decoration — white text on this sunset is only
+   about 2.8:1 without it, and about 7:1 with it. It also happens to look
+   like the game's own vignette. */
+.range--open .range__sky {
+  background:
+    linear-gradient(to bottom,
+      rgba(24, 9, 4, 0) 4%, rgba(24, 9, 4, 0.46) 22%,
+      rgba(24, 9, 4, 0.12) 62%, transparent 80%),
+    radial-gradient(circle 5vw at 74% 58%,
+      var(--game-sun) 0%, rgba(255, 231, 196, 0.5) 24%, transparent 64%),
+    linear-gradient(
+      to bottom,
+      var(--paper) 0%,
+      var(--game-sky-1) 14%,
+      var(--game-sky-2) 62%,
+      var(--game-sky-3) 100%
+    );
+}
+
+/* --- Closing range ------------------------------------------------ */
+/* Same range, mirrored, after dark: the run ends where it ends. */
+.range--close {
+  min-height: clamp(340px, 50vh, 520px);
+  display: flex;
+  align-items: flex-start;
+  margin-top: var(--space-section);
+  padding-top: var(--s-14);
+  padding-bottom: clamp(3rem, 12vw, 7rem);
+}
+.range--close .range__sky {
+  background: linear-gradient(
+    to bottom,
+    var(--paper) 0%,
+    var(--game-night-1) 20%,
+    var(--game-night-2) 70%,
+    var(--game-night-3) 100%
+  );
+}
+.range--close .range__layers { transform: scaleX(-1); }
+
+/* Stars keep their own aspect ratio, so they stay round while the
+   ridges below them stretch. */
+.range__stars {
+  position: absolute;
+  inset: 0 0 40% 0;
+  z-index: -1;
+  width: 100%;
+  height: 60%;
+  fill: var(--game-ink);
+}
+
+/* --- Titling inside a range --------------------------------------- */
+.range .wrap { position: relative; z-index: 1; }
+
+.game-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 1.2rem + 9vw, 7rem);
+  font-weight: 600;
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  color: var(--game-ink);
+}
+.game-tagline {
+  max-width: 34ch;
+  margin-top: var(--s-4);
+  font-size: var(--size-lead);
+  line-height: 1.45;
+  color: var(--game-ink);
+}
+.range .eyebrow { color: var(--game-ink); opacity: 0.85; }
+.range .rule { background: var(--game-ink); opacity: 0.8; }
+
+/* Buttons sitting on sky rather than on paper. */
+.btn--sky {
+  border: 1px solid var(--game-ink);
+  color: var(--game-ink);
+  background: none;
+}
+.btn--sky:hover { background: var(--game-ink); color: var(--game-sky-1); }
+.range--close .btn--sky:hover { color: var(--game-night-1); }
+
+.range :where(a, button):focus-visible { outline-color: var(--game-ink); }
+
+/* --- Metadata strip ----------------------------------------------- */
+.game-facts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+  margin-top: calc(-1 * var(--s-6));
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule);
+}
+.game-facts div { display: flex; flex-direction: column; gap: 2px; }
+.game-facts dt {
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.game-facts dd { margin: 0; font-size: var(--size-small); }
+
+/* --- Case-study body ---------------------------------------------- */
+.beat { padding-top: var(--space-section); }
+.beat__head { padding-top: var(--s-4); border-top: 1px solid var(--rule); }
+
+/* The section counter is the game's own HUD: every number below is the
+   distance actually shown in the screenshot beside it. */
+.beat__dist {
+  font-family: var(--font-mono);
+  font-size: var(--size-eyebrow);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.beat__dist b { color: var(--accent); font-weight: 500; }
+
+.beat__title {
+  font-family: var(--font-display);
+  font-size: var(--size-h2);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+.beat__text {
+  max-width: var(--measure);
+  margin-top: var(--s-5);
+  font-size: var(--size-lead);
+  line-height: 1.6;
+}
+.beat__text + .beat__text { margin-top: var(--s-5); }
+.beat .figure { margin-top: var(--s-8); }
+
+/* --- The contribution box ----------------------------------------- */
+/* The one block a hiring reader must not be able to skip. */
+.contribution {
+  margin-top: var(--space-section);
+  padding: var(--s-6);
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+}
+.contribution__title {
+  font-family: var(--font-display);
+  font-size: var(--size-h3);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+.contribution__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+}
+.contribution__list li {
+  position: relative;
+  padding-left: var(--s-5);
+  max-width: var(--measure);
+}
+.contribution__list li::before {
+  content: "";
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 12px;
+  height: 2px;
+  background: var(--accent);
+}
+.contribution__credit {
+  max-width: var(--measure);
+  margin-top: var(--s-6);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+  font-size: var(--size-small);
+  color: var(--ink-2);
+}
+
+/* --- Media -------------------------------------------------------- */
+.shot {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+}
+
+/* A wide establishing plate, edge to edge. */
+.plate {
+  width: 100vw;
+  margin-left: 50%;
+  translate: -50% 0;
+  margin-top: var(--space-section);
+}
+.plate img { width: 100%; max-height: 62vh; object-fit: cover; display: block; }
+.plate figcaption { width: min(var(--content), 100% - 2 * var(--gutter)); margin-inline: auto; }
+
+.clip { max-width: 640px; }
+.clip video { width: 100%; border: 1px solid var(--rule); background: var(--paper-2); }
+
+/* --- Credits ------------------------------------------------------ */
+.credits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  margin-top: var(--s-6);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+}
+.credits li {
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+/* Without a separator five mono names read as one long string. */
+.credits li + li::before { content: "· "; color: var(--rule); }
+
+/* The closing range is already the break before the footer; the footer's
+   own top margin on top of it just opens a hole. */
+.range--close + .contact { margin-top: 0; border-top: 0; }
+
+/* --- Back link ---------------------------------------------------- */
+.backlink { display: inline-flex; align-items: center; min-height: var(--tap); }
+
+/* ==================================================================
+   Desktop
+   ================================================================== */
+@media (min-width: 900px) {
+  .range--open { padding-top: var(--s-16); }
+  .game-tagline { margin-top: var(--s-6); font-size: 1.25rem; }
+
+  .game-facts {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--s-8);
+    padding-top: var(--s-8);
+  }
+
+  .beat__head { display: grid; grid-template-columns: 5fr 7fr; gap: var(--s-14); align-items: start; }
+  .beat__title { grid-column: 2; grid-row: 1; }
+  .beat__dist  { grid-column: 1; grid-row: 1; padding-top: 0.5em; }
+  .beat__text  { margin-left: calc((100% - var(--s-14)) * 5 / 12 + var(--s-14)); }
+
+  .contribution { padding: var(--s-10); }
+  .contribution__list { gap: var(--s-4); margin-top: var(--s-6); }
+
+  .clip { margin-left: calc((100% - var(--s-14)) * 5 / 12 + var(--s-14)); }
+}

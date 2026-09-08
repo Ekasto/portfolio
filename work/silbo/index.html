@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Silbo — endless runner about movement | Paul Schwab</title>
+<meta name="description" content="Case study: Silbo, a movement-led endless runner made at university with SilboCAMPZ. A shepherd crosses the ridges with his staff, whistling the scattered goats back to the herd.">
+<meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131312" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Silbo — endless runner about movement">
+<meta property="og:description" content="A movement-led endless runner made at university with SilboCAMPZ: jump, chain two actions, and whistle the scattered goats back to the herd.">
+<!-- TODO: og:image should be an absolute URL — some scrapers will not resolve
+     a relative one. Swap in https://<your-pages-domain>/assets/img/silbo/og.jpg
+     once the site has its final address. -->
+<meta property="og:image" content="../../assets/img/silbo/og.jpg">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23191817'/%3E%3Crect%20x='6'%20y='21'%20width='20'%20height='3'%20fill='%23bc3e0d'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/game.css">
+
+<!-- Apply a saved theme choice before first paint. Must stay inline and
+     synchronous, and after the stylesheets. -->
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "light" || t === "dark") {
+        document.documentElement.setAttribute("data-theme", t);
+      }
+    } catch (e) {
+      /* private mode or storage blocked — fall back to the system theme */
+    }
+  })();
+</script>
+</head>
+<body class="game">
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- The ridgeline, defined once and placed by <use> in both ranges.
+     Three parallax depths, drawn to match the soft rounded hills and
+     flat mesa tops of Silbo's own backgrounds. The nearest layer is
+     filled with the page colour, so the page itself is the closest
+     mountain — which is also why the join never needs a seam. -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <g id="range-layers">
+      <path style="fill:var(--layer-far)" d="M 0.0 80.4 C 7.7 80.8, 30.8 81.7, 46.2 82.7 C 61.5 83.7, 76.9 83.8, 92.3 86.5 C 107.7 89.2, 123.1 93.1, 138.5 98.9 C 153.8 104.7, 169.2 113.8, 184.6 121.1 C 200.0 128.5, 215.4 137.6, 230.8 142.8 C 246.2 147.9, 261.5 151.0, 276.9 151.9 C 292.3 152.9, 307.7 150.1, 323.1 148.6 C 338.5 147.2, 353.8 144.2, 369.2 143.3 C 384.6 142.3, 400.0 142.7, 415.4 142.8 C 430.8 142.9, 446.2 144.2, 461.5 143.8 C 476.9 143.4, 492.3 141.9, 507.7 140.6 C 523.1 139.3, 538.5 136.5, 553.8 135.9 C 569.2 135.3, 584.6 135.8, 600.0 137.1 C 615.4 138.5, 630.8 142.5, 646.2 144.0 C 661.5 145.4, 676.9 147.5, 692.3 145.8 C 707.7 144.1, 723.1 139.4, 738.5 133.9 C 753.8 128.3, 769.2 119.1, 784.6 112.5 C 800.0 105.8, 815.4 98.6, 830.8 93.9 C 846.2 89.2, 861.5 86.8, 876.9 84.3 C 892.3 81.9, 907.7 81.1, 923.1 79.5 C 938.5 77.9, 953.8 75.6, 969.2 74.8 C 984.6 73.9, 1000.0 72.7, 1015.4 74.3 C 1030.8 75.9, 1046.2 79.8, 1061.5 84.4 C 1076.9 88.9, 1092.3 96.8, 1107.7 101.8 C 1123.1 106.9, 1138.5 112.4, 1153.8 114.7 C 1169.2 117.0, 1192.3 115.4, 1200.0 115.5 L 1200.0 200.0 L 0 200.0 Z"/>
+      <path style="fill:var(--layer-mid)" d="M 0.0 179.6 C 7.7 175.3, 30.8 161.8, 46.2 154.0 C 61.5 146.2, 76.9 137.8, 92.3 132.7 C 107.7 127.6, 123.1 125.0, 138.5 123.3 C 153.8 121.7, 169.2 123.1, 184.6 123.0 C 200.0 123.0, 215.4 123.6, 230.8 122.9 C 246.2 122.2, 261.5 120.1, 276.9 118.7 C 292.3 117.4, 307.7 115.1, 323.1 115.0 C 338.5 115.0, 353.8 118.0, 369.2 118.6 C 384.6 119.2, 400.0 118.6, 415.4 118.6 C 430.8 118.6, 446.2 116.0, 461.5 118.6 C 476.9 121.1, 492.3 133.7, 507.7 134.0 C 523.1 134.4, 538.5 125.1, 553.8 120.6 C 569.2 116.1, 584.6 110.0, 600.0 107.0 C 615.4 104.1, 630.8 102.7, 646.2 103.1 C 661.5 103.4, 676.9 106.7, 692.3 109.2 C 707.7 111.7, 723.1 115.6, 738.5 118.0 C 753.8 120.5, 769.2 121.9, 784.6 123.8 C 800.0 125.7, 815.4 126.4, 830.8 129.4 C 846.2 132.5, 861.5 136.4, 876.9 142.3 C 892.3 148.1, 907.7 156.8, 923.1 164.5 C 938.5 172.1, 953.8 181.9, 969.2 188.1 C 984.6 194.2, 1000.0 199.4, 1015.4 201.4 C 1030.8 203.5, 1046.2 202.0, 1061.5 200.3 C 1076.9 198.5, 1092.3 193.8, 1107.7 191.1 C 1123.1 188.5, 1138.5 185.6, 1153.8 184.2 C 1169.2 182.9, 1192.3 183.3, 1200.0 183.1 L 1200.0 200.0 L 0 200.0 Z"/>
+      <path style="fill:var(--layer-near)" d="M 0.0 138.4 C 7.7 140.8, 30.8 145.6, 46.2 153.0 C 61.5 160.3, 76.9 174.0, 92.3 182.7 C 107.7 191.4, 123.1 201.5, 138.5 205.3 C 153.8 209.1, 169.2 203.6, 184.6 205.3 C 200.0 207.1, 215.4 213.7, 230.8 215.8 C 246.2 217.9, 261.5 218.8, 276.9 218.1 C 292.3 217.3, 307.7 214.8, 323.1 211.3 C 338.5 207.7, 353.8 200.0, 369.2 196.5 C 384.6 193.1, 400.0 190.0, 415.4 190.4 C 430.8 190.8, 446.2 196.6, 461.5 198.9 C 476.9 201.3, 492.3 205.9, 507.7 204.7 C 523.1 203.6, 538.5 198.0, 553.8 192.2 C 569.2 186.4, 584.6 176.3, 600.0 169.9 C 615.4 163.5, 630.8 158.1, 646.2 153.9 C 661.5 149.7, 676.9 147.7, 692.3 144.7 C 707.7 141.6, 723.1 137.4, 738.5 135.7 C 753.8 134.0, 769.2 134.7, 784.6 134.5 C 800.0 134.3, 815.4 127.1, 830.8 134.5 C 846.2 141.9, 861.5 169.2, 876.9 178.9 C 892.3 188.7, 907.7 191.1, 923.1 193.1 C 938.5 195.0, 953.8 191.3, 969.2 190.4 C 984.6 189.6, 1000.0 187.2, 1015.4 188.0 C 1030.8 188.8, 1046.2 192.7, 1061.5 195.1 C 1076.9 197.6, 1092.3 201.1, 1107.7 202.9 C 1123.1 204.7, 1138.5 204.2, 1153.8 205.8 C 1169.2 207.3, 1192.3 211.1, 1200.0 212.2 L 1200.0 200.0 L 0 200.0 Z"/>
+    </g>
+  </defs>
+</svg>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="site-header__bar">
+      <a class="brand" href="../../">
+        <span class="brand__name">Paul Schwab</span>
+        <span class="brand__role">Systems &middot; Tools</span>
+      </a>
+
+      <a class="btn btn--outline" href="../../#contact">Resume</a>
+
+      <nav class="nav" aria-label="Sections">
+        <a class="nav__link" href="../../#work" aria-current="true">Work</a>
+        <a class="nav__link" href="../../#tools">Tools</a>
+        <a class="nav__link" href="../../#method">Method</a>
+        <a class="nav__link" href="../../#about">About</a>
+
+        <button class="theme-toggle" type="button" id="theme-toggle" hidden>
+          <span class="theme-toggle__dot" aria-hidden="true"></span>
+          <span class="theme-toggle__label">System</span>
+        </button>
+
+        <a class="btn btn--outline nav__resume" href="../../#contact">Resume</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===== The range the run starts in ============================= -->
+  <section class="range range--open">
+    <div class="range__sky" aria-hidden="true"></div>
+    <svg class="range__layers" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <use href="#range-layers"></use>
+    </svg>
+
+    <div class="wrap">
+      <p class="eyebrow">Work &mdash; 01 &mdash; University project</p>
+      <div class="rule"></div>
+      <h1 class="game-title">Silbo</h1>
+      <p class="game-tagline">An endless runner about movement. A shepherd crosses the ridges with his staff, ahead of a dark corruption, whistling the scattered goats back to the herd.</p>
+      <p class="hero__ctas">
+        <a class="btn btn--sky" href="https://silbocampz.itch.io/silbo" target="_blank" rel="noopener">Play it on itch.io &nearr;</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: var(--s-10)">
+    <div class="wrap">
+      <!-- TODO: add the year once you have the dates — a case study without
+           one makes a reader guess how recent it is. -->
+      <dl class="game-facts">
+        <div><dt>Role</dt><dd>Gameplay &amp; systems programming, design, tech art</dd></div>
+        <div><dt>Team</dt><dd>5 &mdash; SilboCAMPZ</dd></div>
+        <div><dt>Engine</dt><dd>Unity, C#</dd></div>
+        <div><dt>Platform</dt><dd>Windows, macOS &mdash; free</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Establishing shot: the only capture with no HUD on it. -->
+  <figure class="plate">
+    <img src="../../assets/img/silbo/plate.webp"
+         srcset="../../assets/img/silbo/plate-1000.webp 1000w, ../../assets/img/silbo/plate.webp 2000w"
+         sizes="100vw" width="2000" height="1086" decoding="async"
+         alt="A wide view of Silbo's landscape at sunset: rocks and flowering scrub on a ridge, a broken wooden structure, and the sun sitting low on the horizon.">
+    <figcaption class="figure__caption">
+      <span>Fig. 01</span>
+      <span>The islands the run is set on — rock, scrub, and the wooden bones of old herding gear</span>
+    </figcaption>
+  </figure>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="beat__text">Silbo was a university project, made by five of us as <strong>SilboCAMPZ</strong>. It takes its name and its central mechanic from <strong>Silbo Gomero</strong>, the whistled language of La Gomera, and the rest of it from the way goats and sheep are herded across the Canary Islands. You play a shepherd running a landscape that never ends, and the reason to keep running is that the movement is good.</p>
+
+      <!-- ===================================================================
+           REPLACE THESE BULLETS.
+
+           They are written from the four areas you told me were yours
+           (gameplay programming, systems / level generation, design, tech
+           art), and they are deliberately general because I do not know
+           which specific features you personally built.
+
+           This box is the single highest-signal thing on the page — the
+           one block a hiring reader will not skip. Swap each bullet for
+           the concrete thing you actually wrote, with nouns and numbers:
+           "I wrote the chunk spawner that streams terrain ahead of the
+           player", not "I worked on level generation". Anything you did
+           not do, cut — the credit line below does more for you than an
+           over-claim does.
+           =================================================================== -->
+      <div class="contribution">
+        <h2 class="contribution__title">What I did</h2>
+        <ul class="contribution__list">
+          <li><strong>Gameplay programming.</strong> The movement the whole game rests on — the jump, the two actions you chain into it, and the whistle that reaches out into the world around you.</li>
+          <li><strong>Systems and level generation.</strong> The run itself: terrain arriving ahead of the player, checkpoints to deliver goats to, and the distance and score that make one run comparable to the last.</li>
+          <li><strong>Design.</strong> Tuning what those verbs feel like in the hand, and how hard the landscape pushes back as the metres add up.</li>
+          <li><strong>Tech art.</strong> The look the game is remembered for: the parallax ridges, the whistle's expanding rings, and the way the palette turns over across a run.</li>
+        </ul>
+        <p class="contribution__credit">Made with Adam, Zora, Tenairi and Clara. The game is credited on itch.io as AI assisted, with AI used for code — the same way I work now: models draft, I read and own what ships.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Beats. The section number is the game's own HUD: every
+       figure below is captioned with the distance actually showing in
+       that screenshot, and the run is laid out in the order you would
+       reach them. ================================================== -->
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__head">
+        <p class="beat__dist"><b>1648 m</b> &mdash; the corruption</p>
+        <h2 class="beat__title">The colour goes out of the world</h2>
+      </div>
+      <!-- TODO: confirm what triggers this. I have described only what the
+           screenshot shows, because I do not know whether the desaturation
+           is the corruption catching up, a hit state, or a whole biome. One
+           sentence from you makes this the most interesting section here. -->
+      <p class="beat__text">What you are running from is never spelled out, and the game is better for it. The clearest thing it does with the corruption is take the colour away: the sun, the rock, the scrub and the shepherd's own staff all drop to grey, and the only thing that has not changed is that you are still moving.</p>
+      <p class="beat__text">It is a cheap effect and an enormously effective one. Nothing about the layout tells you that you are in trouble — the palette does, at a glance, while your hands stay busy.</p>
+      <figure class="figure">
+        <img class="shot" src="../../assets/img/silbo/drained.webp"
+             srcset="../../assets/img/silbo/drained-800.webp 800w, ../../assets/img/silbo/drained.webp 1600w"
+             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+             alt="Silbo rendered entirely in greys: the shepherd stands on a stone arch beside collapsing wooden herding structures, with a white sun behind them.">
+        <figcaption class="figure__caption">
+          <span>Fig. 02 &mdash; 1648 m</span>
+          <span>Same geometry, same readable silhouettes, no colour at all</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__head">
+        <p class="beat__dist"><b>2200 m</b> &mdash; the movement</p>
+        <h2 class="beat__title">One verb, and two ways to extend it</h2>
+      </div>
+      <p class="beat__text">The runner is built on a jump you can extend with two further actions, so crossing a gap is a decision rather than a reflex. The staff is the reason it reads as herding instead of platforming: the shepherd vaults on it, and that single prop carries most of the game's identity before a word is said.</p>
+      <p class="beat__text">The landscape is drawn as flat silhouettes at three depths, which keeps the platform you have to land on unmistakable even when the screen is busy — the surfaces you can stand on are always the darkest, nearest layer.</p>
+      <figure class="figure">
+        <img class="shot" src="../../assets/img/silbo/hero.webp"
+             srcset="../../assets/img/silbo/hero-800.webp 800w, ../../assets/img/silbo/hero.webp 1600w"
+             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+             alt="The white shepherd stands with his staff on a narrow rock pillar at dusk, an orange sky behind him and a wooden wheel silhouetted against the setting sun.">
+        <figcaption class="figure__caption">
+          <span>Fig. 03 &mdash; 2200 m</span>
+          <span>Three depths of silhouette; the landable surface is always the nearest one</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__head">
+        <p class="beat__dist"><b>2289 m</b> &mdash; the whistle</p>
+        <h2 class="beat__title">The mechanic the game is named after</h2>
+      </div>
+      <p class="beat__text">On La Gomera, shepherds talk across valleys in <strong>Silbo Gomero</strong> — a whistled form of Spanish that carries where a voice will not. That is the game's title and it is also its second input. The whistle is how you reach past the edge of your own jump: it opens things up, and it is how the goats know where you are.</p>
+      <p class="beat__text">On screen it is three expanding rings, and the bells strung along the herding frames light up as the rings pass through them. It costs almost nothing to draw and it makes an invisible mechanic legible — you can see exactly how far your whistle just carried.</p>
+      <figure class="figure">
+        <img class="shot" src="../../assets/img/silbo/whistle.webp"
+             srcset="../../assets/img/silbo/whistle-800.webp 800w, ../../assets/img/silbo/whistle.webp 1600w"
+             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+             alt="Three white rings expand outward from the leaping shepherd across a pink sky, passing through a row of hanging bells that glow pale blue.">
+        <figcaption class="figure__caption">
+          <span>Fig. 04 &mdash; 2289 m</span>
+          <span>The whistle drawn as range: the bells inside the rings answer it</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__head">
+        <p class="beat__dist"><b>2539 m</b> &mdash; the herd</p>
+        <h2 class="beat__title">Your score is a line of goats behind you</h2>
+      </div>
+      <p class="beat__text">Goats are scattered along the route, and getting one is only half of it — you then have to carry it to the next checkpoint without losing it. So the thing you are protecting is visible at all times: the goats fall into a line behind the shepherd and jump the gaps you jump, and a bad landing is expensive in a way you can see rather than read.</p>
+      <p class="beat__text">The count is carved into the rock as a petroglyph, next to painted goats and a painted herder, so even the score readout is doing atmospheric work instead of sitting in a corner of the HUD.</p>
+      <figure class="figure">
+        <img class="shot" src="../../assets/img/silbo/herd.webp"
+             srcset="../../assets/img/silbo/herd-800.webp 800w, ../../assets/img/silbo/herd.webp 1600w"
+             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+             alt="Under a starry night sky the shepherd leaps with five goats trailing behind him in a line, towards a rock face covered in glowing blue cave paintings of goats and a large number five.">
+        <figcaption class="figure__caption">
+          <span>Fig. 05 &mdash; 2539 m</span>
+          <span>Five rescued, and the count painted on the rock rather than printed on the HUD</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__head">
+        <p class="beat__dist"><b>3228 m</b> &mdash; first light</p>
+        <h2 class="beat__title">The sky keeps score too</h2>
+      </div>
+      <!-- TODO: confirm — I am reading this off the five captures, where the
+           sky gets later as the distance gets higher. If the sky is on a
+           timer rather than on distance, this paragraph needs one word
+           changing. -->
+      <p class="beat__text">Line the captures up by distance and the sky runs forward with them: dusk at 2200 m, deep pink at 2289 m, full night at 2539 m, and the first cold blue of morning by 3228 m. In a game with no level numbers and no map, the colour of the sky is the only progress bar there is — and it is the one that makes a long run feel like it went somewhere.</p>
+      <p class="beat__text">This is the far end of the loop the game is built for: an endless runner with a high-score table, where the thing you are actually chasing is a sky you have not seen yet.</p>
+      <figure class="figure">
+        <img class="shot" src="../../assets/img/silbo/bells.webp"
+             srcset="../../assets/img/silbo/bells-800.webp 800w, ../../assets/img/silbo/bells.webp 1600w"
+             sizes="(min-width: 900px) 1240px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+             alt="Pre-dawn blue light over a row of low wind-bent trees hung with bells, thorny growth along the ground, the shepherd and a goat running beneath them.">
+        <figcaption class="figure__caption">
+          <span>Fig. 06 &mdash; 3228 m</span>
+          <span>Same rules, four kilometres later, under a sky you had to earn</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__head">
+        <p class="beat__dist">In motion</p>
+        <h2 class="beat__title">What it looks like moving</h2>
+      </div>
+      <figure class="figure clip">
+        <!-- Click-to-play rather than autoplay: it is the accessible default,
+             and it is the one that respects a reduced-motion preference
+             without needing script to do it. -->
+        <video src="../../assets/img/silbo/gameplay.mp4" width="640" height="360"
+               controls loop muted playsinline preload="metadata"
+               poster="../../assets/img/silbo/gameplay-poster.webp"
+               aria-label="A short looping clip of Silbo: the shepherd running and jumping up a mountainside at dusk, past falling rock pillars.">
+          <a href="../../assets/img/silbo/gameplay.mp4">Download the gameplay clip (MP4)</a>
+        </video>
+        <figcaption class="figure__caption">
+          <span>Fig. 07</span>
+          <span>Climbing a mountainside at dusk &mdash; captured at the game's own 320&times;180</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat__head">
+        <p class="beat__dist">Credits</p>
+        <h2 class="beat__title">Made by five people</h2>
+      </div>
+      <p class="beat__text">Silbo is a SilboCAMPZ project. It is still listed as in development, and it is free.</p>
+      <ul class="credits">
+        <li>Adam</li>
+        <li>Zora</li>
+        <li>Tenairi</li>
+        <li>Clara</li>
+        <li>Paul Schwab (Ekasto)</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== The range the run ends in =============================== -->
+<section class="range range--close">
+  <div class="range__sky" aria-hidden="true"></div>
+  <svg class="range__stars" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <g opacity="0.9">
+      <circle cx="58" cy="44" r="1.6"/><circle cx="131" cy="96" r="1.1"/><circle cx="196" cy="38" r="2.0"/>
+      <circle cx="244" cy="142" r="1.2"/><circle cx="298" cy="72" r="1.5"/><circle cx="352" cy="26" r="1.0"/>
+      <circle cx="401" cy="118" r="1.8"/><circle cx="447" cy="60" r="1.1"/><circle cx="503" cy="163" r="1.3"/>
+      <circle cx="548" cy="34" r="1.6"/><circle cx="597" cy="104" r="1.0"/><circle cx="641" cy="52" r="1.4"/>
+      <circle cx="688" cy="138" r="1.7"/><circle cx="734" cy="80" r="1.1"/><circle cx="779" cy="30" r="1.3"/>
+      <circle cx="826" cy="126" r="1.5"/><circle cx="871" cy="66" r="1.0"/><circle cx="918" cy="152" r="1.8"/>
+      <circle cx="963" cy="42" r="1.2"/><circle cx="1008" cy="110" r="1.4"/><circle cx="1054" cy="58" r="1.6"/>
+      <circle cx="1099" cy="134" r="1.0"/><circle cx="1146" cy="86" r="1.3"/><circle cx="86" cy="168" r="1.2"/>
+      <circle cx="168" cy="190" r="1.0"/><circle cx="318" cy="196" r="1.4"/><circle cx="468" cy="212" r="1.1"/>
+      <circle cx="618" cy="184" r="1.2"/><circle cx="768" cy="204" r="1.0"/><circle cx="1010" cy="196" r="1.3"/>
+    </g>
+  </svg>
+  <svg class="range__layers" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <use href="#range-layers"></use>
+  </svg>
+
+  <div class="wrap">
+    <p class="eyebrow">End of the run</p>
+    <div class="rule"></div>
+    <h2 class="game-title" style="font-size: var(--size-h2)">It is free, and it runs about four kilometres before the sky turns.</h2>
+    <p class="hero__ctas">
+      <a class="btn btn--sky" href="https://silbocampz.itch.io/silbo" target="_blank" rel="noopener">Play Silbo on itch.io &nearr;</a>
+    </p>
+  </div>
+</section>
+
+<footer class="contact" id="contact">
+  <div class="wrap">
+    <p class="eyebrow">Contact</p>
+    <div class="rule"></div>
+
+    <h2 class="contact__title">Say hello.</h2>
+    <p class="contact__note">Open to internships and systems-design collaborations. I answer everything.</p>
+
+    <!-- The form itself lives once, on the landing page. No address in the
+         markup here either — a mailto: in a public repo gets scraped. -->
+    <p class="hero__ctas">
+      <a class="btn btn--solid" href="../../#contact">Use the contact form</a>
+    </p>
+
+    <div class="contact__links">
+      <a class="link-out backlink" href="../../#work">&larr; All work</a>
+      <a class="link-out" href="https://github.com/Ekasto" rel="me">GitHub &nearr;</a>
+      <a class="link-out" href="https://ekasto.itch.io" rel="me">itch.io &nearr;</a>
+    </div>
+
+    <div class="colophon meta">
+      <span>Set in Familjen Grotesk, IBM Plex Sans &amp; Mono. Built by me.</span>
+      <span>Silbo artwork &copy; SilboCAMPZ &mdash; Berlin, Germany &copy; 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/theme.js" defer></script>
+</body>
+</html>
