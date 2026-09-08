@@ -117,18 +117,23 @@
            grow this section; never leave a hole in a grid. -->
       <div class="project-list">
 
+        <!-- The link lives on the title and stretches over the whole card,
+             so image, text and label are all one target — one link in the
+             accessibility tree, and a card-sized tap target on a phone.
+             A card with no destination simply has no <a> in its title, and
+             then none of the door behaviour applies to it. -->
         <article class="project">
           <div class="project__media">
-            <a href="./work/silbo/">
-              <img src="./assets/img/silbo/hero-800.webp"
-                   srcset="./assets/img/silbo/hero-800.webp 800w, ./assets/img/silbo/hero.webp 1600w"
-                   sizes="(min-width: 900px) 720px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
-                   alt="Silbo: a white shepherd with a staff stands on a rock pillar against an orange dusk sky.">
-            </a>
+            <img src="./assets/img/silbo/hero-800.webp"
+                 srcset="./assets/img/silbo/hero-800.webp 800w, ./assets/img/silbo/hero.webp 1600w"
+                 sizes="(min-width: 900px) 720px, 100vw" width="1600" height="900" loading="lazy" decoding="async"
+                 alt="Silbo: a white shepherd with a staff stands on a rock pillar against an orange dusk sky.">
           </div>
           <div class="project__body">
             <p class="project__fig-no meta">Fig. 02</p>
-            <h3 class="project__title">Silbo</h3>
+            <h3 class="project__title">
+              <a href="./work/silbo/">Silbo<span class="sr-only"> — read the breakdown</span></a>
+            </h3>
             <p class="project__desc">An endless runner about movement, named after the whistled language of La Gomera — you whistle to reach past the edge of your own jump, and to call the scattered goats back into line behind you.</p>
             <div class="meta-row">
               <span>Gameplay &amp; systems</span><span class="meta-row__sep">&middot;</span>
@@ -136,7 +141,9 @@
               <span>University</span><span class="meta-row__sep">&middot;</span>
               <span>Team of 5</span>
             </div>
-            <a class="link-out" href="./work/silbo/">Read the breakdown ↗</a>
+            <!-- Decorative: the title above is already the link, and the
+                 arrow is → because this goes to another page on the site. -->
+            <p class="link-out project__cta" aria-hidden="true">Read the Silbo breakdown →</p>
           </div>
         </article>
 
@@ -154,8 +161,10 @@
               <span>Year</span><span class="meta-row__sep">&middot;</span>
               <span>Team size</span>
             </div>
-            <!-- TODO: link to the case study once it exists. -->
-            <a class="link-out" href="#">Read the breakdown ↗</a>
+            <!-- TODO: when this becomes a real project, move the link onto
+                 the title the way the Silbo card does it — that is what makes
+                 the whole card clickable. -->
+            <a class="link-out" href="#">Read the breakdown →</a>
           </div>
         </article>
 
