@@ -1,41 +1,72 @@
 /* ------------------------------------------------------------------
-   game.css — the per-game case-study skin.
+   case-study.css — the skin every case study shares.
 
    The site chrome (header, footer, type, rules) stays exactly as it is
-   on the landing page. What changes per game is a small set of colour
-   variables and the two full-bleed "ranges" that open and close the
-   page. Every game gets its own palette block; the components below
-   read only from those variables, so a second game is a new block of
-   --game-* values and nothing else.
+   on the landing page. What changes per project is the pair of
+   full-bleed "ranges" that open and close the page, and the colours
+   inside them. Everything below reads only from the contract, so a new
+   case study is a palette block and a page, never a new stylesheet.
 
-   Silbo's values are sampled from the game's own screenshots.
+   The contract a project block must fill:
+
+     --cs-ink                 text and rules drawn on a band
+     --cs-band                what that ink sits on, for reversed buttons
+     --layer-far/-mid/-near   the three depths of the band artwork,
+                              set separately on .range--open and
+                              .range--close; --layer-near is --paper, so
+                              the page itself is the nearest layer and
+                              the join never needs a seam
+     .range--open  .range__sky   the background behind the opening band
+     .range--close .range__sky   and behind the closing one
+
+   The band artwork itself is an SVG <defs> block in the page, placed by
+   <use> in both ranges: Silbo has a ridgeline, Crack Painter has a slab
+   of painted cracks. Custom properties inherit into the shadow tree
+   <use> creates, which is what lets one geometry serve both bands.
    ------------------------------------------------------------------ */
 
-.game {
+/* --- Silbo: sampled from the game's own screenshots ---------------- */
+.silbo {
   /* Sunset — the sky the run starts in. */
-  --game-sky-1:  #e2624c;
-  --game-sky-2:  #eb8060;
-  --game-sky-3:  #f0a578;
-  --game-sun:    #ffe7c4;
+  --silbo-sky-1:  #e2624c;
+  --silbo-sky-2:  #eb8060;
+  --silbo-sky-3:  #f0a578;
+  --silbo-sun:    #ffe7c4;
 
   /* Night — the sky the run ends in. */
-  --game-night-1: #101c34;
-  --game-night-2: #172541;
-  --game-night-3: #2b3350;
+  --silbo-night-1: #101c34;
+  --silbo-night-2: #172541;
+  --silbo-night-3: #2b3350;
 
   /* Rock, in the two ranges. */
-  --game-far:    #c9694f;
-  --game-mid:    #8f4632;
-  --game-far-n:  #26304d;
-  --game-mid-n:  #171f36;
+  --silbo-far:    #c9694f;
+  --silbo-mid:    #8f4632;
+  --silbo-far-n:  #26304d;
+  --silbo-mid-n:  #171f36;
 
-  --game-ink:    #f2efe9;   /* the shepherd's white, for text on sky */
+  --cs-ink:      #f2efe9;   /* the shepherd's white, for text on sky */
+}
+
+/* --- Crack Painter 2D: sampled from the tool's own window ---------- */
+.crack-painter {
+  /* Unity's editor chrome, warmed a little so it sits with the site's
+     off-white rather than fighting it as flat neutral grey. */
+  --cp-editor-1: #46423b;
+  --cp-editor-2: #2f2c27;
+  --cp-editor-3: #1c1a17;
+
+  /* The crack colour is the tool's own: crack maps are painted in
+     magenta, and this is that magenta lifted just off pure #f0f, which
+     is unreadably harsh against a warm ground. */
+  --cp-crack: #ff2bff;
+
+  --cs-ink: #f2efe9;
 }
 
 /* 100vw counts the scrollbar, so a full-bleed band overhangs the page by
    its width. Clip rather than hide: clip does not make the body a scroll
    container, so anchor links and focus scrolling still behave. */
-body.game { overflow-x: clip; }
+body.case { overflow-x: clip; }
 
 /* --- The ranges --------------------------------------------------- */
 /* Full-bleed out of .wrap without causing a horizontal scrollbar. */
@@ -64,22 +95,21 @@ body.game { overflow-x: clip; }
   height: 100%;
 }
 
-/* Ridges distort a little on very wide screens. These are soft, rounded
-   hills, so stretching reads as distance rather than as a mistake. */
+/* The artwork is stretched to the band, so it distorts a little on very
+   wide screens. Both bands are drawn as soft or angular masses where
+   that reads as distance rather than as a mistake.
+
+   width is set explicitly: an <svg> is a replaced element, so left/right
+   alone leave it at the width its viewBox implies. */
 .range__layers {
   position: absolute;
   right: 0;
   bottom: -1px;   /* kills the hairline some browsers leave under a path */
   left: 0;
+  width: 100%;
   height: 58%;
   z-index: -1;
 }
-
-/* The ridge geometry is defined once, in a <defs> group, and placed by
-   <use> in both bands. Custom properties inherit into the shadow tree
-   that <use> creates, so each band recolours the same range. */
-.range--open  { --layer-far: var(--game-far);   --layer-mid: var(--game-mid);   --layer-near: var(--paper); }
-.range--close { --layer-far: var(--game-far-n); --layer-mid: var(--game-mid-n); --layer-near: var(--paper); }
 
 /* --- Opening range ------------------------------------------------ */
 .range--open {
@@ -90,30 +120,7 @@ body.game { overflow-x: clip; }
   padding-bottom: clamp(3rem, 12vw, 7rem);
   margin-top: var(--s-6);
 }
-/* The low sun sits where it sits in the game's own dusk shot: just above
-   the ridgeline, right of centre.
-
-   The scrim on top is not decoration — white text on this sunset is only
-   about 2.8:1 without it, and about 7:1 with it. It also happens to look
-   like the game's own vignette. */
-.range--open .range__sky {
-  background:
-    linear-gradient(to bottom,
-      rgba(24, 9, 4, 0) 4%, rgba(24, 9, 4, 0.46) 22%,
-      rgba(24, 9, 4, 0.12) 62%, transparent 80%),
-    radial-gradient(circle 5vw at 74% 58%,
-      var(--game-sun) 0%, rgba(255, 231, 196, 0.5) 24%, transparent 64%),
-    linear-gradient(
-      to bottom,
-      var(--paper) 0%,
-      var(--game-sky-1) 14%,
-      var(--game-sky-2) 62%,
-      var(--game-sky-3) 100%
-    );
-}
-
 /* --- Closing range ------------------------------------------------ */
-/* Same range, mirrored, after dark: the run ends where it ends. */
 .range--close {
   min-height: clamp(340px, 50vh, 520px);
   display: flex;
@@ -122,16 +129,112 @@ body.game { overflow-x: clip; }
   padding-top: var(--s-14);
   padding-bottom: clamp(3rem, 12vw, 7rem);
 }
-.range--close .range__sky {
+
+/* --- Silbo's two skies -------------------------------------------- */
+/* The low sun sits where it sits in the game's own dusk shot: just above
+   the ridgeline, right of centre.
+
+   The scrim on top is not decoration — white text on this sunset is only
+   about 2.8:1 without it, and about 7:1 with it. It also happens to look
+   like the game's own vignette. */
+.silbo .range--open {
+  --layer-far: var(--silbo-far);
+  --layer-mid: var(--silbo-mid);
+  --layer-near: var(--paper);
+  --cs-band: var(--silbo-sky-1);
+}
+.silbo .range--open .range__sky {
+  background:
+    linear-gradient(to bottom,
+      rgba(24, 9, 4, 0) 4%, rgba(24, 9, 4, 0.46) 22%,
+      rgba(24, 9, 4, 0.12) 62%, transparent 80%),
+    radial-gradient(circle 5vw at 74% 58%,
+      var(--silbo-sun) 0%, rgba(255, 231, 196, 0.5) 24%, transparent 64%),
+    linear-gradient(
+      to bottom,
+      var(--paper) 0%,
+      var(--silbo-sky-1) 14%,
+      var(--silbo-sky-2) 62%,
+      var(--silbo-sky-3) 100%
+    );
+}
+
+/* Same range, mirrored, after dark: the run ends where it ends. */
+.silbo .range--close {
+  --layer-far: var(--silbo-far-n);
+  --layer-mid: var(--silbo-mid-n);
+  --layer-near: var(--paper);
+  --cs-band: var(--silbo-night-1);
+}
+.silbo .range--close .range__sky {
   background: linear-gradient(
     to bottom,
     var(--paper) 0%,
-    var(--game-night-1) 20%,
-    var(--game-night-2) 70%,
-    var(--game-night-3) 100%
+    var(--silbo-night-1) 20%,
+    var(--silbo-night-2) 70%,
+    var(--silbo-night-3) 100%
   );
 }
-.range--close .range__layers { transform: scaleX(-1); }
+.silbo .range--close .range__layers { transform: scaleX(-1); }
+
+/* --- Crack Painter's two bands ------------------------------------ */
+/* The page opens on the slab whole, with the crack lines painted on it,
+   and closes on the very same pieces after the break. Both bands are the
+   editor's own grey: nothing changes but the geometry, which is exactly
+   what the tool claims — you decide where it breaks, and it breaks there.
+
+   The base of the slab is filled with --paper, so as on Silbo the page
+   itself is the nearest layer and the join needs no seam. That is also why
+   the band gets lighter towards the bottom rather than darker: the slab is
+   whatever colour the page is, and it has to read against the band in dark
+   mode as well as light. Lit from below happens to suit it — the glow comes
+   off the cracks. */
+.crack-painter .range--open,
+.crack-painter .range--close {
+  --layer-near: var(--paper);
+  --cs-band: var(--cp-editor-2);
+}
+.crack-painter .range--open .range__sky {
+  background:
+    radial-gradient(55% 80% at 22% 94%,
+      rgba(255, 43, 255, 0.20) 0%, transparent 72%),
+    linear-gradient(
+      to bottom,
+      var(--paper) 0%,
+      var(--cp-editor-3) 16%,
+      var(--cp-editor-2) 58%,
+      var(--cp-editor-1) 100%
+    );
+}
+/* No magenta in the closing band: the cracks are not lines any more,
+   they are the gaps between the pieces. */
+.crack-painter .range--close .range__sky {
+  background: linear-gradient(
+    to bottom,
+    var(--paper) 0%,
+    var(--cp-editor-3) 16%,
+    var(--cp-editor-2) 58%,
+    var(--cp-editor-1) 100%
+  );
+}
+/* The slab is a shallow strip along the bottom of the band. It has to be:
+   unlike a ridgeline it is a solid mass of --paper, so wherever it reaches
+   is where off-white titling stops being readable. The band's own bottom
+   padding is what guarantees the clearance — it stays larger than the
+   height the fracture edge can climb to. */
+.crack-painter .range__layers { height: clamp(120px, 34%, 260px); }
+.crack-painter .range--open,
+.crack-painter .range--close { padding-bottom: clamp(11rem, 20vw, 13rem); }
+
+.slab { fill: var(--layer-near); }
+.slab__cracks {
+  fill: none;
+  stroke: var(--cp-crack);
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgba(255, 0, 255, 0.55));
+}
 
 /* Stars keep their own aspect ratio, so they stay round while the
    ridges below them stretch. */
@@ -141,43 +244,43 @@ body.game { overflow-x: clip; }
   z-index: -1;
   width: 100%;
   height: 60%;
-  fill: var(--game-ink);
+  fill: var(--cs-ink);
 }
 
 /* --- Titling inside a range --------------------------------------- */
 .range .wrap { position: relative; z-index: 1; }
 
-.game-title {
+.case-title {
   font-family: var(--font-display);
   font-size: clamp(3.25rem, 1.2rem + 9vw, 7rem);
   font-weight: 600;
   line-height: 0.94;
   letter-spacing: -0.04em;
-  color: var(--game-ink);
+  color: var(--cs-ink);
 }
-.game-tagline {
+.case-tagline {
   max-width: 34ch;
   margin-top: var(--s-4);
   font-size: var(--size-lead);
   line-height: 1.45;
-  color: var(--game-ink);
+  color: var(--cs-ink);
 }
-.range .eyebrow { color: var(--game-ink); opacity: 0.85; }
-.range .rule { background: var(--game-ink); opacity: 0.8; }
+.range .eyebrow { color: var(--cs-ink); opacity: 0.85; }
+.range .rule { background: var(--cs-ink); opacity: 0.8; }
 
-/* Buttons sitting on sky rather than on paper. */
+/* Buttons sitting on a band rather than on paper. On hover they invert
+   into the band behind them, whatever that band is. */
 .btn--sky {
-  border: 1px solid var(--game-ink);
-  color: var(--game-ink);
+  border: 1px solid var(--cs-ink);
+  color: var(--cs-ink);
   background: none;
 }
-.btn--sky:hover { background: var(--game-ink); color: var(--game-sky-1); }
-.range--close .btn--sky:hover { color: var(--game-night-1); }
+.btn--sky:hover { background: var(--cs-ink); color: var(--cs-band); }
 
-.range :where(a, button):focus-visible { outline-color: var(--game-ink); }
+.range :where(a, button):focus-visible { outline-color: var(--cs-ink); }
 
 /* --- Metadata strip ----------------------------------------------- */
-.game-facts {
+.case-facts {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--s-4);
@@ -185,15 +288,15 @@ body.game { overflow-x: clip; }
   padding-top: var(--s-6);
   border-top: 1px solid var(--rule);
 }
-.game-facts div { display: flex; flex-direction: column; gap: 2px; }
-.game-facts dt {
+.case-facts div { display: flex; flex-direction: column; gap: 2px; }
+.case-facts dt {
   font-family: var(--font-mono);
   font-size: var(--size-meta);
   letter-spacing: var(--track-mono);
   text-transform: uppercase;
   color: var(--ink-2);
 }
-.game-facts dd { margin: 0; font-size: var(--size-small); }
+.case-facts dd { margin: 0; font-size: var(--size-small); }
 
 /* --- Case-study body ---------------------------------------------- */
 /* A beat is a narrow margin column and a wide text column. The margin
@@ -398,6 +501,17 @@ body.game { overflow-x: clip; }
   background: var(--paper-2);
 }
 
+/* A tall capture — an Inspector, a tool window — kept to about a column
+   so it does not tower over the prose it belongs to. Deliberately not a
+   .shot: that class forces 16/9, and overriding the ratio back to auto
+   also throws away the one the width and height attributes give a
+   still-loading image, which collapses the figure to a hairline. */
+.shot--tall {
+  max-width: min(420px, 100%);
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+}
+
 /* A wide establishing plate, edge to edge. */
 .plate {
   width: 100vw;
@@ -442,9 +556,9 @@ body.game { overflow-x: clip; }
    ================================================================== */
 @media (min-width: 900px) {
   .range--open { padding-top: var(--s-16); }
-  .game-tagline { margin-top: var(--s-6); font-size: 1.25rem; }
+  .case-tagline { margin-top: var(--s-6); font-size: 1.25rem; }
 
-  .game-facts {
+  .case-facts {
     grid-template-columns: repeat(3, 1fr);
     gap: var(--s-6) var(--s-8);
     padding-top: var(--s-8);
