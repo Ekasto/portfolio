@@ -63,6 +63,205 @@
   --cs-ink: #f2efe9;
 }
 
+/* ==================================================================
+   The day cycle — scroll position as time of day
+   ==================================================================
+
+   Silbo's world generator runs the light from dawn through midday and
+   evening into night, and the case study says why: with no level
+   numbers and no map, the colour of the sky is the only progress bar
+   the game has. This makes the page behave the same way. Reading down
+   it is running the distance, so the page's own light goes with you.
+
+   Mechanically it is one number. daynight.js writes --sun, 0 at the
+   top of <main> and 1 at the bottom of it, and everything below is
+   derived from that: four phase palettes, blended in sequence.
+
+   Two rules keep it from wrecking the page it is decorating:
+
+   1. The reading surface never crosses into mid-tone. --paper travels
+      a long way in hue and a short way in lightness (L* 97 -> 84 in
+      light mode), so body text keeps better than 12:1 the whole way
+      down. Night proper is not asked of the prose — it is the closing
+      range and the ridgeline, which are painted night already and were
+      always the arrival.
+
+   2. Only paper, ink and the accent are authored per phase. --paper-2,
+      --rule, --ink-2 and --accent-2 are mixed out of those, at the
+      ratios that reproduce the site's shipped tokens to within a
+      rounding step. That is what makes an arbitrary point on the arc
+      safe: the hairlines and the secondary prose cannot drift away
+      from the ground they sit on, because they are made out of it.
+
+   The mechanism is generic — a page opts in with class="cycle" and
+   fills the twelve phase values. Silbo's are sampled from its own sky.
+   ------------------------------------------------------------------ */
+
+/* Registering these keeps the blend chain resolving to real colours at
+   each step instead of substituting three layers of nested text, and
+   it gives the whole thing a sane starting value if the script never
+   runs. Unsupported engines ignore the block and fall back to plain
+   substitution, which computes the same colours. */
+@property --sun      { syntax: "<number>"; inherits: true; initial-value: 0.34; }
+@property --paper-a  { syntax: "<color>";  inherits: true; initial-value: #f6f5f2; }
+@property --paper-b  { syntax: "<color>";  inherits: true; initial-value: #f6f5f2; }
+@property --ink-a    { syntax: "<color>";  inherits: true; initial-value: #191817; }
+@property --ink-b    { syntax: "<color>";  inherits: true; initial-value: #191817; }
+@property --accent-a { syntax: "<color>";  inherits: true; initial-value: #bc3e0d; }
+@property --accent-b { syntax: "<color>";  inherits: true; initial-value: #bc3e0d; }
+
+/* --- Silbo's four skies, as the page reads them -------------------- */
+/* Light mode walks the full arc: first light, flat midday, low sun,
+   and then the blue that is left once the sun has gone. Dark mode is
+   already after dark, so its arc is the one a night has — embers of
+   the sunset at the top, cold and blue at the bottom — rather than a
+   day it cannot have. Same twelve values, different journey. */
+.silbo {
+  --dawn-paper-l:   #fcf5e8;   /* warm cream, sun not yet up          */
+  --dawn-ink-l:     #1d1811;
+  --dawn-accent-l:  oklch(0.50 0.14 62);   /* ochre                   */
+
+  --noon-paper-l:   #f6f5f2;   /* the site's own off-white            */
+  --noon-ink-l:     #191817;
+  --noon-accent-l:  oklch(0.54 0.17 38);   /* the site's own accent   */
+
+  --eve-paper-l:    #f2e8d9;   /* low sun across the page             */
+  --eve-ink-l:      #23180d;
+  --eve-accent-l:   oklch(0.50 0.18 30);
+
+  --night-paper-l:  #cbd1e0;   /* moonlight: cool, dim, still paper   */
+  --night-ink-l:    #15161f;
+  --night-accent-l: oklch(0.46 0.16 22);   /* ember                   */
+
+  --dawn-paper-d:   #1a1613;
+  --dawn-ink-d:     #f2e9dd;
+  --dawn-accent-d:  oklch(0.76 0.14 62);
+
+  --noon-paper-d:   #131312;
+  --noon-ink-d:     #eceae4;
+  --noon-accent-d:  oklch(0.74 0.15 45);
+
+  --eve-paper-d:    #181310;
+  --eve-ink-d:      #f2e4d2;
+  --eve-accent-d:   oklch(0.73 0.16 32);
+
+  --night-paper-d:  #0e1120;
+  --night-ink-d:    #e3e8f5;
+  --night-accent-d: oklch(0.74 0.14 24);
+}
+
+/* --- Which set is live, in the same three states as tokens.css ----- */
+/* The light set is the base, so the two dark blocks are the only ones
+   that have to re-point anything: with data-theme="light" neither of
+   them matches and the base stands. */
+body.cycle {
+  --dawn-paper:   var(--dawn-paper-l);
+  --dawn-ink:     var(--dawn-ink-l);
+  --dawn-accent:  var(--dawn-accent-l);
+  --noon-paper:   var(--noon-paper-l);
+  --noon-ink:     var(--noon-ink-l);
+  --noon-accent:  var(--noon-accent-l);
+  --eve-paper:    var(--eve-paper-l);
+  --eve-ink:      var(--eve-ink-l);
+  --eve-accent:   var(--eve-accent-l);
+  --night-paper:  var(--night-paper-l);
+  --night-ink:    var(--night-ink-l);
+  --night-accent: var(--night-accent-l);
+
+  /* How far --ink-2 is lifted off the ink towards the paper. Dark mode
+     needs a longer step to land on the same apparent hierarchy. */
+  --ink-2-mix: 23%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body.cycle {
+    --dawn-paper:   var(--dawn-paper-d);
+    --dawn-ink:     var(--dawn-ink-d);
+    --dawn-accent:  var(--dawn-accent-d);
+    --noon-paper:   var(--noon-paper-d);
+    --noon-ink:     var(--noon-ink-d);
+    --noon-accent:  var(--noon-accent-d);
+    --eve-paper:    var(--eve-paper-d);
+    --eve-ink:      var(--eve-ink-d);
+    --eve-accent:   var(--eve-accent-d);
+    --night-paper:  var(--night-paper-d);
+    --night-ink:    var(--night-ink-d);
+    --night-accent: var(--night-accent-d);
+    --ink-2-mix: 30%;
+  }
+}
+
+:root[data-theme="dark"] body.cycle {
+  --dawn-paper:   var(--dawn-paper-d);
+  --dawn-ink:     var(--dawn-ink-d);
+  --dawn-accent:  var(--dawn-accent-d);
+  --noon-paper:   var(--noon-paper-d);
+  --noon-ink:     var(--noon-ink-d);
+  --noon-accent:  var(--noon-accent-d);
+  --eve-paper:    var(--eve-paper-d);
+  --eve-ink:      var(--eve-ink-d);
+  --eve-accent:   var(--eve-accent-d);
+  --night-paper:  var(--night-paper-d);
+  --night-ink:    var(--night-ink-d);
+  --night-accent: var(--night-accent-d);
+  --ink-2-mix: 30%;
+}
+
+/* --- The blend ----------------------------------------------------- */
+/* Each phase hands over to the next across its own stretch of the run,
+   and each weight is clamped outside that stretch. Clamping is what
+   makes the chain land exactly on a phase colour at its stop instead
+   of smearing all four together everywhere.
+
+   The stops are not evenly spaced. Midday is short and the evening is
+   long because that is the shape of the page: the ledger and the first
+   beats are the flat middle of the run, and the light should start
+   going somewhere well before the closing band rather than all at once
+   at the end.
+
+   The palette is redefined on <body> rather than on :root, so the four
+   theme blocks in tokens.css keep working untouched and this page only
+   shadows their result for everything inside it. */
+body.cycle {
+  /* Declared here as well as registered above, and it is not belt and
+     braces: without @property an undeclared --sun is invalid, which
+     takes the whole chain with it and leaves the page with no ground
+     and no ink at all. This is the value the page holds if the script
+     never runs — the midday stop, which is the site's own palette. */
+  --sun: 0.34;
+
+  --w-noon:  clamp(0, var(--sun) / 0.34, 1);
+  --w-eve:   clamp(0, (var(--sun) - 0.34) / 0.36, 1);
+  --w-night: clamp(0, (var(--sun) - 0.70) / 0.30, 1);
+
+  --paper-a: color-mix(in oklab, var(--dawn-paper), var(--noon-paper)  calc(var(--w-noon) * 100%));
+  --paper-b: color-mix(in oklab, var(--paper-a),    var(--eve-paper)   calc(var(--w-eve) * 100%));
+  --paper:   color-mix(in oklab, var(--paper-b),    var(--night-paper) calc(var(--w-night) * 100%));
+
+  --ink-a:   color-mix(in oklab, var(--dawn-ink),   var(--noon-ink)    calc(var(--w-noon) * 100%));
+  --ink-b:   color-mix(in oklab, var(--ink-a),      var(--eve-ink)     calc(var(--w-eve) * 100%));
+  --ink:     color-mix(in oklab, var(--ink-b),      var(--night-ink)   calc(var(--w-night) * 100%));
+
+  --accent-a: color-mix(in oklab, var(--dawn-accent), var(--noon-accent)  calc(var(--w-noon) * 100%));
+  --accent-b: color-mix(in oklab, var(--accent-a),    var(--eve-accent)   calc(var(--w-eve) * 100%));
+  --accent:   color-mix(in oklab, var(--accent-b),    var(--night-accent) calc(var(--w-night) * 100%));
+
+  /* Everything else is made out of the ground and the ink, at the
+     ratios that reproduce tokens.css to within a rounding step. They
+     therefore track the arc for free and cannot drift out of contrast
+     with it, wherever on the arc the reader happens to be. */
+  --paper-2:  color-mix(in oklab, var(--paper), var(--ink) 5%);
+  --rule:     color-mix(in oklab, var(--paper), var(--ink) 13%);
+  --ink-2:    color-mix(in oklab, var(--ink), var(--paper) var(--ink-2-mix));
+  --accent-2: color-mix(in oklab, var(--accent), var(--ink) 20%);
+}
+
+/* The bands at either end are the anchors the arc runs between, so
+   they keep their own painted skies. The one thing they take from the
+   cycle is --layer-near, which is --paper: the nearest ridge is the
+   page itself, so at the top it is dawn cream, and by the closing band
+   it has cooled to a moonlit grey against the night behind it. */
+
 /* 100vw counts the scrollbar, so a full-bleed band overhangs the page by
    its width. Clip rather than hide: clip does not make the body a scroll
    container, so anchor links and focus scrolling still behave. */
