@@ -134,6 +134,11 @@ body.case { overflow-x: clip; }
 /* The low sun sits where it sits in the game's own dusk shot: just above
    the ridgeline, right of centre.
 
+   Both skies start at full colour on row zero, so the band meets the page
+   on a hard edge rather than dissolving up out of it. The ridgeline at
+   the bottom is already a cut; this makes the top one too, and the run
+   opens the way a shot does.
+
    The scrim on top is not decoration — white text on this sunset is only
    about 2.8:1 without it, and about 7:1 with it. It also happens to look
    like the game's own vignette. */
@@ -152,9 +157,8 @@ body.case { overflow-x: clip; }
       var(--silbo-sun) 0%, rgba(255, 231, 196, 0.5) 24%, transparent 64%),
     linear-gradient(
       to bottom,
-      var(--paper) 0%,
-      var(--silbo-sky-1) 14%,
-      var(--silbo-sky-2) 62%,
+      var(--silbo-sky-1) 0%,
+      var(--silbo-sky-2) 56%,
       var(--silbo-sky-3) 100%
     );
 }
@@ -169,9 +173,8 @@ body.case { overflow-x: clip; }
 .silbo .range--close .range__sky {
   background: linear-gradient(
     to bottom,
-    var(--paper) 0%,
-    var(--silbo-night-1) 20%,
-    var(--silbo-night-2) 70%,
+    var(--silbo-night-1) 0%,
+    var(--silbo-night-2) 62%,
     var(--silbo-night-3) 100%
   );
 }
