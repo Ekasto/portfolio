@@ -194,10 +194,12 @@
         </div>
 
         <figure class="figure tool__figure">
-          <img src="./assets/img/crack-painter/baker-800.webp"
-               srcset="./assets/img/crack-painter/baker-800.webp 800w, ./assets/img/crack-painter/baker.webp 1280w"
-               sizes="(min-width: 900px) 700px, 100vw" width="1280" height="720" loading="lazy" decoding="async"
-               alt="The Crack Painter 2D window in Unity: a stone wall sprite with magenta crack lines painted between the blocks, and a status bar reading “7 pieces — ready to bake”.">
+          <a href="./tools/crack-painter-2d/" aria-label="Explore Crack Painter 2D">
+            <img src="./assets/img/crack-painter/baker-800.webp"
+                 srcset="./assets/img/crack-painter/baker-800.webp 800w, ./assets/img/crack-painter/baker.webp 1280w"
+                 sizes="(min-width: 900px) 700px, 100vw" width="1280" height="720" loading="lazy" decoding="async"
+                 alt="The Crack Painter 2D window in Unity: a stone wall sprite with magenta crack lines painted between the blocks, and a status bar reading “7 pieces — ready to bake”.">
+          </a>
           <figcaption class="figure__caption">
             <span>Fig. 04</span>
             <span>The crack map editor &mdash; pieces counted live, before the bake</span>
@@ -349,5 +351,8 @@
 </footer>
 
 <script src="./assets/js/theme.js" defer></script>
+<!-- The home page shatters to reveal Crack Painter 2D when its project
+     link is opened. The same links also work without the animation. -->
+<script src="./assets/js/shatter.js" defer></script>
 </body>
 </html>
